@@ -1,4 +1,4 @@
-:root {
+169:root {
   --bg: #f3efe8;
   --panel: #fffdf8;
   --ink: #1f2324;
@@ -194,7 +194,7 @@ button:hover {
   border: 1px solid #e4ddcc;
   border-radius: 18px;
   padding: 42px 34px;
-  touch-action: none;
+  touch-action: pan-y;
 }
 
 /* Texto */
@@ -291,7 +291,7 @@ input[type="range"].guided-glow {
   }
 
   .workspace {
-    order: -1;
+   order: 0;
   }
 
   .phone-frame {
