@@ -1,0 +1,789 @@
+const scriptureInput = document.getElementById("scriptureInput");
+const applyTextBtn = document.getElementById("applyTextBtn");
+const scriptureText = document.getElementById("scriptureText");
+const sticker = document.getElementById("sticker");
+const stickerUpload = document.getElementById("stickerUpload");
+
+const opacityRange = document.getElementById("opacityRange");
+const opacityValue = document.getElementById("opacityValue");
+const sizeRange = document.getElementById("sizeRange");
+const sizeValue = document.getElementById("sizeValue");
+
+const resetStickerBtn = document.getElementById("resetStickerBtn");
+const newProjectBtn = document.getElementById("newProjectBtn");
+const saveProjectBtn = document.getElementById("saveProjectBtn");
+const loadProjectBtn = document.getElementById("loadProjectBtn");
+
+const exportProjectBtn = document.getElementById("exportProjectBtn");
+const importProjectBtn = document.getElementById("importProjectBtn");
+const importProjectInput = document.getElementById("importProjectInput");
+
+const exportBtn = document.getElementById("exportBtn");
+const shareBtn = document.getElementById("shareBtn");
+
+const backgroundSelect = document.getElementById("backgroundSelect");
+const projectNameInput = document.getElementById("projectNameInput");
+
+const edgeSoftnessRange = document.getElementById("edgeSoftnessRange");
+const edgeSoftnessValue = document.getElementById("edgeSoftnessValue");
+const colorBoostRange = document.getElementById("colorBoostRange");
+const colorBoostValue = document.getElementById("colorBoostValue");
+
+const captureArea = document.getElementById("captureArea");
+
+let textStepDone = false;
+let stickerStepDone = false;
+let backgroundStepDone = false;
+let opacityStepDone = false;
+let sizeStepDone = false;
+let edgeStepDone = false;
+let colorStepDone = false;
+let projectStepDone = false;
+let exportStepDone = false;
+let shareStepDone = false;
+
+let isDragging = false;
+let dragOffsetX = 0;
+let dragOffsetY = 0;
+
+function clearGuideGlow() {
+  const glowingItems = document.querySelectorAll(".guided-glow");
+
+  glowingItems.forEach((item) => {
+    item.classList.remove("guided-glow");
+  });
+}
+
+function hideSticker() {
+  sticker.style.display = "none";
+  sticker.classList.remove("selected");
+}
+
+function showSticker() {
+  sticker.style.display = "block";
+}
+
+function updateGuideGlow() {
+  clearGuideGlow();
+
+  if (!scriptureInput.value.trim()) {
+    scriptureInput.classList.add("guided-glow");
+    return;
+  }
+
+  if (!textStepDone) {
+    applyTextBtn.classList.add("guided-glow");
+    return;
+  }
+
+  if (!stickerStepDone) {
+    stickerUpload.classList.add("guided-glow");
+    return;
+  }
+
+  if (!backgroundStepDone) {
+    backgroundSelect.classList.add("guided-glow");
+    return;
+  }
+
+  if (!opacityStepDone) {
+    opacityRange.classList.add("guided-glow");
+    return;
+  }
+
+  if (!sizeStepDone) {
+    sizeRange.classList.add("guided-glow");
+    return;
+  }
+
+  if (!edgeStepDone) {
+    edgeSoftnessRange.classList.add("guided-glow");
+    return;
+  }
+
+  if (!colorStepDone) {
+    colorBoostRange.classList.add("guided-glow");
+    return;
+  }
+
+  if (!projectStepDone) {
+    saveProjectBtn.classList.add("guided-glow");
+    return;
+  }
+
+  if (!exportStepDone) {
+    exportBtn.classList.add("guided-glow");
+    return;
+  }
+
+  if (!shareStepDone) {
+    shareBtn.classList.add("guided-glow");
+    return;
+  }
+}
+
+function resetWorkflowAfterTextChange() {
+  stickerStepDone = false;
+  backgroundStepDone = false;
+  opacityStepDone = false;
+  sizeStepDone = false;
+  edgeStepDone = false;
+  colorStepDone = false;
+  projectStepDone = false;
+  exportStepDone = false;
+  shareStepDone = false;
+}
+
+function applyText() {
+  const text = scriptureInput.value.trim();
+
+  scriptureText.textContent = text;
+
+  if (text.length > 0) {
+    textStepDone = true;
+    projectStepDone = false;
+    exportStepDone = false;
+    shareStepDone = false;
+  } else {
+    textStepDone = false;
+    resetWorkflowAfterTextChange();
+    hideSticker();
+  }
+
+  updateGuideGlow();
+}
+
+function updateOpacity(markStep = true) {
+  const value = Number(opacityRange.value);
+
+  sticker.style.opacity = value / 100;
+  opacityValue.textContent = `${value}%`;
+
+  if (markStep) {
+    opacityStepDone = true;
+    projectStepDone = false;
+    exportStepDone = false;
+    shareStepDone = false;
+    updateGuideGlow();
+  }
+}
+
+function updateSize(markStep = true) {
+  const value = Number(sizeRange.value);
+
+  sticker.style.width = `${value}px`;
+  sizeValue.textContent = `${value} px`;
+
+  if (markStep) {
+    sizeStepDone = true;
+    projectStepDone = false;
+    exportStepDone = false;
+    shareStepDone = false;
+    updateGuideGlow();
+  }
+}
+
+function applyBackground(markStep = false) {
+  captureArea.classList.remove(
+    "bg-white",
+    "bg-cream",
+    "bg-blue",
+    "bg-pink",
+    "bg-peach"
+  );
+
+  captureArea.classList.add(`bg-${backgroundSelect.value}`);
+
+  if (markStep) {
+    backgroundStepDone = true;
+    projectStepDone = false;
+    exportStepDone = false;
+    shareStepDone = false;
+    updateGuideGlow();
+  }
+}
+
+function updateStickerEffects(markEdgeStep = false, markColorStep = false) {
+  const edge = Number(edgeSoftnessRange.value);
+  const colorBoost = Number(colorBoostRange.value);
+
+  edgeSoftnessValue.textContent = `${edge} px`;
+  colorBoostValue.textContent = `${colorBoost}%`;
+
+  sticker.style.filter = `saturate(${colorBoost}%) contrast(105%)`;
+
+  if (edge > 0) {
+    const mask = `
+      linear-gradient(to right, transparent 0px, black ${edge}px, black calc(100% - ${edge}px), transparent 100%),
+      linear-gradient(to bottom, transparent 0px, black ${edge}px, black calc(100% - ${edge}px), transparent 100%)
+    `;
+
+    sticker.style.webkitMaskImage = mask;
+    sticker.style.maskImage = mask;
+    sticker.style.webkitMaskSize = "100% 100%";
+    sticker.style.maskSize = "100% 100%";
+    sticker.style.webkitMaskRepeat = "no-repeat";
+    sticker.style.maskRepeat = "no-repeat";
+    sticker.style.webkitMaskComposite = "source-in";
+    sticker.style.maskComposite = "intersect";
+  } else {
+    sticker.style.webkitMaskImage = "none";
+    sticker.style.maskImage = "none";
+    sticker.style.webkitMaskComposite = "";
+    sticker.style.maskComposite = "";
+  }
+
+  if (markEdgeStep) {
+    edgeStepDone = true;
+  }
+
+  if (markColorStep) {
+    colorStepDone = true;
+  }
+
+  if (markEdgeStep || markColorStep) {
+    projectStepDone = false;
+    exportStepDone = false;
+    shareStepDone = false;
+    updateGuideGlow();
+  }
+}
+
+function centerSticker() {
+  const pageRect = captureArea.getBoundingClientRect();
+  const stickerWidth = sticker.offsetWidth || Number(sizeRange.value);
+
+  sticker.style.left = `${(pageRect.width - stickerWidth) / 2}px`;
+  sticker.style.top = `${pageRect.height * 0.48}px`;
+}
+
+function getPointerPosition(event) {
+  const point = event.touches ? event.touches[0] : event;
+
+  return {
+    x: point.clientX,
+    y: point.clientY
+  };
+}
+
+function startDrag(event) {
+  if (!stickerStepDone) return;
+
+  event.preventDefault();
+  sticker.classList.add("selected");
+
+  const pointer = getPointerPosition(event);
+  const stickerRect = sticker.getBoundingClientRect();
+
+  isDragging = true;
+  dragOffsetX = pointer.x - stickerRect.left;
+  dragOffsetY = pointer.y - stickerRect.top;
+
+  window.addEventListener("pointermove", drag);
+  window.addEventListener("pointerup", stopDrag);
+  window.addEventListener("touchmove", drag, { passive: false });
+  window.addEventListener("touchend", stopDrag);
+}
+
+function drag(event) {
+  if (!isDragging) return;
+
+  event.preventDefault();
+
+  const pointer = getPointerPosition(event);
+  const pageRect = captureArea.getBoundingClientRect();
+
+  let newLeft = pointer.x - pageRect.left - dragOffsetX;
+  let newTop = pointer.y - pageRect.top - dragOffsetY;
+
+  const maxLeft = captureArea.clientWidth - sticker.offsetWidth;
+  const maxTop = captureArea.clientHeight - sticker.offsetHeight;
+
+  newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+  newTop = Math.max(0, Math.min(newTop, maxTop));
+
+  sticker.style.left = `${newLeft}px`;
+  sticker.style.top = `${newTop}px`;
+
+  projectStepDone = false;
+  exportStepDone = false;
+  shareStepDone = false;
+}
+
+function stopDrag() {
+  isDragging = false;
+
+  window.removeEventListener("pointermove", drag);
+  window.removeEventListener("pointerup", stopDrag);
+  window.removeEventListener("touchmove", drag);
+  window.removeEventListener("touchend", stopDrag);
+
+  updateGuideGlow();
+}
+
+function getSafeProjectFileName() {
+  const typedName = projectNameInput.value.trim();
+
+  if (!typedName) {
+    return "scripture-sticker";
+  }
+
+  const safeName = typedName
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return safeName || "scripture-sticker";
+}
+
+function getProjectData() {
+  return {
+    projectName: projectNameInput.value.trim(),
+    text: scriptureInput.value,
+    stickerSrc: stickerStepDone ? sticker.src : "",
+    stickerLeft: sticker.style.left,
+    stickerTop: sticker.style.top,
+    stickerWidth: sticker.style.width,
+    stickerOpacity: sticker.style.opacity,
+    opacityRangeValue: opacityRange.value,
+    sizeRangeValue: sizeRange.value,
+    backgroundValue: backgroundSelect.value,
+    edgeSoftnessValue: edgeSoftnessRange.value,
+    colorBoostValue: colorBoostRange.value
+  };
+}
+
+function applyProjectData(projectData, markAsSaved = true) {
+  projectNameInput.value = projectData.projectName || "";
+  scriptureInput.value = projectData.text || "";
+  scriptureText.textContent = projectData.text || "";
+
+  if (projectData.stickerSrc) {
+    sticker.src = projectData.stickerSrc;
+    showSticker();
+    stickerStepDone = true;
+  } else {
+    sticker.removeAttribute("src");
+    hideSticker();
+    stickerStepDone = false;
+  }
+
+  sticker.style.left = projectData.stickerLeft || "110px";
+  sticker.style.top = projectData.stickerTop || "330px";
+  sticker.style.width = projectData.stickerWidth || "210px";
+  sticker.style.opacity = projectData.stickerOpacity || "0.45";
+
+  opacityRange.value = projectData.opacityRangeValue || "45";
+  sizeRange.value = projectData.sizeRangeValue || "210";
+  backgroundSelect.value = projectData.backgroundValue || "white";
+  edgeSoftnessRange.value = projectData.edgeSoftnessValue || "0";
+  colorBoostRange.value = projectData.colorBoostValue || "100";
+
+  updateOpacity(false);
+  updateSize(false);
+  applyBackground(false);
+  updateStickerEffects(false, false);
+
+  textStepDone = scriptureInput.value.trim().length > 0;
+  backgroundStepDone = true;
+  opacityStepDone = true;
+  sizeStepDone = true;
+  edgeStepDone = true;
+  colorStepDone = true;
+  projectStepDone = markAsSaved;
+  exportStepDone = false;
+  shareStepDone = false;
+
+  updateGuideGlow();
+}
+
+function saveProject() {
+  const projectData = getProjectData();
+
+  localStorage.setItem("scriptureStickersProject", JSON.stringify(projectData));
+
+  projectStepDone = true;
+  updateGuideGlow();
+
+  alert("Projeto guardado neste navegador.");
+}
+
+function exportProjectFile() {
+  const projectData = getProjectData();
+
+  const blob = new Blob([JSON.stringify(projectData, null, 2)], {
+    type: "application/json"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = `${getSafeProjectFileName()}.json`;
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  URL.revokeObjectURL(url);
+}
+
+function importProjectFile(event) {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function (loadEvent) {
+    try {
+      const projectData = JSON.parse(loadEvent.target.result);
+
+      applyProjectData(projectData, false);
+
+      localStorage.setItem(
+        "scriptureStickersProject",
+        JSON.stringify(projectData)
+      );
+
+      projectStepDone = true;
+      updateGuideGlow();
+
+      alert("Projeto importado.");
+    } catch (error) {
+      console.error(error);
+      alert("Não foi possível importar este projeto. Verifique se o arquivo é .json válido.");
+    }
+
+    importProjectInput.value = "";
+  };
+
+  reader.readAsText(file);
+}
+
+function newProject() {
+  const confirmNewProject = confirm(
+    "Deseja iniciar um novo projeto? O projeto guardado neste navegador será apagado."
+  );
+
+  if (!confirmNewProject) return;
+
+  localStorage.removeItem("scriptureStickersProject");
+
+  projectNameInput.value = "";
+  scriptureInput.value = "";
+  scriptureText.textContent = "";
+  stickerUpload.value = "";
+
+  sticker.removeAttribute("src");
+  hideSticker();
+
+  opacityRange.value = "45";
+  sizeRange.value = "210";
+  backgroundSelect.value = "white";
+  edgeSoftnessRange.value = "0";
+  colorBoostRange.value = "100";
+
+  updateOpacity(false);
+  updateSize(false);
+  applyBackground(false);
+  updateStickerEffects(false, false);
+  centerSticker();
+
+  textStepDone = false;
+  stickerStepDone = false;
+  backgroundStepDone = false;
+  opacityStepDone = false;
+  sizeStepDone = false;
+  edgeStepDone = false;
+  colorStepDone = false;
+  projectStepDone = false;
+  exportStepDone = false;
+  shareStepDone = false;
+
+  updateGuideGlow();
+}
+
+function loadProject(showAlert = true) {
+  const savedProject = localStorage.getItem("scriptureStickersProject");
+
+  if (!savedProject) {
+    if (showAlert) {
+      alert("Nenhum projeto guardado foi encontrado neste navegador.");
+    }
+
+    return false;
+  }
+
+  try {
+    const projectData = JSON.parse(savedProject);
+
+    applyProjectData(projectData, true);
+
+    if (showAlert) {
+      alert("Projeto aberto.");
+    }
+
+    return true;
+  } catch (error) {
+    console.error(error);
+
+    if (showAlert) {
+      alert("O projeto guardado está corrompido ou não pode ser aberto.");
+    }
+
+    return false;
+  }
+}
+
+function loadStickerFromFile(event) {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function (loadEvent) {
+    sticker.src = loadEvent.target.result;
+    showSticker();
+    centerSticker();
+
+    stickerStepDone = true;
+    opacityStepDone = false;
+    sizeStepDone = false;
+    edgeStepDone = false;
+    colorStepDone = false;
+    projectStepDone = false;
+    exportStepDone = false;
+    shareStepDone = false;
+
+    updateGuideGlow();
+  };
+
+  reader.readAsDataURL(file);
+}
+
+function waitForImage(imageElement) {
+  if (!stickerStepDone) {
+    return Promise.resolve();
+  }
+
+  if (imageElement.complete && imageElement.naturalWidth > 0) {
+    return Promise.resolve();
+  }
+
+  return new Promise((resolve, reject) => {
+    imageElement.onload = resolve;
+    imageElement.onerror = reject;
+  });
+}
+
+async function createExportCanvas() {
+  sticker.classList.remove("selected");
+
+  if (typeof html2canvas === "undefined") {
+    alert("A biblioteca de exportação ainda não carregou. Verifique sua internet e tente novamente.");
+    throw new Error("html2canvas não carregou");
+  }
+
+  if (stickerStepDone) {
+    await waitForImage(sticker);
+  }
+
+  const captureBackground =
+    window.getComputedStyle(captureArea).backgroundColor || "#fffdf7";
+
+  const canvas = await html2canvas(captureArea, {
+    backgroundColor: captureBackground,
+    scale: 2,
+    useCORS: true
+  });
+
+  return canvas;
+}
+
+function downloadCanvas(canvas) {
+  const link = document.createElement("a");
+
+  link.download = `${getSafeProjectFileName()}.png`;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+
+async function exportImage() {
+  try {
+    const canvas = await createExportCanvas();
+
+    downloadCanvas(canvas);
+
+    return true;
+  } catch (error) {
+    console.error(error);
+    alert("Não foi possível salvar a imagem. Tente carregar outro sticker ou atualizar a página.");
+
+    return false;
+  }
+}
+
+async function shareImage() {
+  try {
+    const canvas = await createExportCanvas();
+
+    const blob = await new Promise((resolve) => {
+      canvas.toBlob(resolve, "image/png");
+    });
+
+    if (!blob) {
+      alert("Não foi possível preparar a imagem para compartilhar.");
+
+      return false;
+    }
+
+    const file = new File([blob], `${getSafeProjectFileName()}.png`, {
+      type: "image/png"
+    });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        title: "Scripture Stickers",
+        text: "Imagem criada com Scripture Stickers.",
+        files: [file]
+      });
+
+      return true;
+    }
+
+    downloadCanvas(canvas);
+    alert("Este navegador não permite compartilhar diretamente. A imagem foi salva para você compartilhar manualmente.");
+
+    return true;
+  } catch (error) {
+    console.error(error);
+    alert("Não foi possível compartilhar a imagem.");
+
+    return false;
+  }
+}
+
+applyTextBtn.addEventListener("click", () => {
+  applyText();
+});
+
+scriptureInput.addEventListener("input", () => {
+  if (scriptureInput.value.trim().length === 0) {
+    scriptureText.textContent = "";
+    textStepDone = false;
+    resetWorkflowAfterTextChange();
+    hideSticker();
+  } else {
+    textStepDone = false;
+    projectStepDone = false;
+    exportStepDone = false;
+    shareStepDone = false;
+  }
+
+  updateGuideGlow();
+});
+
+projectNameInput.addEventListener("input", () => {
+  projectStepDone = false;
+  exportStepDone = false;
+  shareStepDone = false;
+});
+
+stickerUpload.addEventListener("change", loadStickerFromFile);
+
+sticker.addEventListener("pointerdown", startDrag);
+sticker.addEventListener("touchstart", startDrag, { passive: false });
+
+resetStickerBtn.addEventListener("click", () => {
+  centerSticker();
+  projectStepDone = false;
+  exportStepDone = false;
+  shareStepDone = false;
+  updateGuideGlow();
+});
+
+newProjectBtn.addEventListener("click", () => {
+  newProject();
+});
+
+saveProjectBtn.addEventListener("click", () => {
+  saveProject();
+});
+
+loadProjectBtn.addEventListener("click", () => {
+  loadProject(true);
+});
+
+exportProjectBtn.addEventListener("click", () => {
+  exportProjectFile();
+});
+
+importProjectBtn.addEventListener("click", () => {
+  importProjectInput.click();
+});
+
+importProjectInput.addEventListener("change", importProjectFile);
+
+backgroundSelect.addEventListener("change", () => {
+  applyBackground(true);
+});
+
+opacityRange.addEventListener("input", () => {
+  updateOpacity(true);
+});
+
+sizeRange.addEventListener("input", () => {
+  updateSize(true);
+});
+
+edgeSoftnessRange.addEventListener("input", () => {
+  updateStickerEffects(true, false);
+});
+
+colorBoostRange.addEventListener("input", () => {
+  updateStickerEffects(false, true);
+});
+
+exportBtn.addEventListener("click", async () => {
+  const exported = await exportImage();
+
+  if (exported) {
+    exportStepDone = true;
+    updateGuideGlow();
+  }
+});
+
+shareBtn.addEventListener("click", async () => {
+  const shared = await shareImage();
+
+  if (shared) {
+    shareStepDone = true;
+    updateGuideGlow();
+  }
+});
+
+document.addEventListener("click", (event) => {
+  if (event.target !== sticker) {
+    sticker.classList.remove("selected");
+  }
+});
+
+window.addEventListener("load", () => {
+  hideSticker();
+  updateOpacity(false);
+  updateSize(false);
+  applyBackground(false);
+  updateStickerEffects(false, false);
+
+  const projectWasOpened = loadProject(false);
+
+  if (!projectWasOpened) {
+    applyText();
+    centerSticker();
+    updateGuideGlow();
+  }
+});

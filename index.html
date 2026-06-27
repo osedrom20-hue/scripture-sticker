@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scripture Stickers | Adesivos das Escrituras</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#1f4e5f" />
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>Scripture Stickers</h1>
+      <p>Adesivos digitais translúcidos para estudo das escrituras</p>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel controls-panel">
+      <h2>1. Texto</h2>
+
+      <label for="scriptureInput">Cole aqui o texto da escritura</label>
+      <textarea id="scriptureInput" spellcheck="false">Chapter 2
+
+Lehi takes his family into the wilderness by the Red Sea—They leave their property—Lehi offers a sacrifice to the Lord and teaches his sons to keep the commandments—Laman and Lemuel murmur against their father—Nephi is obedient and prays in faith; the Lord speaks to him, and he is chosen to rule over his brethren. About 600 B.C.
+
+1 For behold, it came to pass that the Lord spake unto my father, yea, even in a dream, and said unto him: Blessed art thou Lehi, because of the things which thou hast done; and because thou hast been faithful and declared unto this people the things which I commanded thee, behold, they seek to take away thy life.
+
+2 And it came to pass that the Lord commanded my father, even in a dream, that he should take his family and depart into the wilderness.
+
+3 And it came to pass that he was obedient unto the word of the Lord, wherefore he did as the Lord commanded him.</textarea>
+
+      <button id="applyTextBtn" class="primary-btn">Aplicar texto</button>
+
+      <h2>2. Sticker</h2>
+
+      <label for="stickerUpload">Carregar sticker transparente</label>
+      <input id="stickerUpload" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" />
+
+      <div class="control-group">
+        <div class="control-group">
+  <label for="projectNameInput">Nome do projeto</label>
+  <input
+    id="projectNameInput"
+    type="text"
+    placeholder="Ex: arrependimento-alma-42"
+  />
+</div>
+        <label for="backgroundSelect">Fundo:</label>
+<select id="backgroundSelect">
+  <option value="white">Branco</option>
+  <option value="cream">Creme</option>
+  <option value="blue">Azul claro</option>
+  <option value="pink">Rosa/lilás claro</option>
+  <option value="peach">Pêssego</option>
+</select>
+        <label for="opacityRange">Transparência</label>
+        <input id="opacityRange" type="range" min="5" max="100" value="45" />
+        <span id="opacityValue">45%</span>
+      </div>
+
+     <div class="control-group">
+  <label for="sizeRange">Tamanho</label>
+  <input id="sizeRange" type="range" min="60" max="520" value="210" />
+  <span id="sizeValue">210 px</span>
+</div>
+
+<div class="control-group">
+  <label for="edgeSoftnessRange">Suavizar bordas</label>
+  <input type="range" id="edgeSoftnessRange" min="0" max="30" value="0" />
+  <span id="edgeSoftnessValue">0 px</span>
+</div>
+
+<div class="control-group">
+  <label for="colorBoostRange">Intensidade da cor</label>
+  <input type="range" id="colorBoostRange" min="0" max="200" value="100" />
+  <span id="colorBoostValue">100%</span>
+</div>
+
+      <div class="button-row">
+  <button id="resetStickerBtn">Centralizar</button>
+<button id="newProjectBtn">Novo projeto</button>
+<button id="saveProjectBtn">Guardar projeto</button>
+<button id="loadProjectBtn">Abrir projeto</button>
+
+<button id="exportProjectBtn">Exportar projeto</button>
+<button id="importProjectBtn">Importar projeto</button>
+<input id="importProjectInput" type="file" accept=".json,application/json" hidden />
+
+<button id="exportBtn" class="primary-btn">Salvar imagem</button>
+<button id="shareBtn" class="primary-btn">Compartilhar</button>
+</div>
+
+      <p class="note">
+        Ajuste o sticker sobre o texto usando tamanho, posição e transparência.
+      </p>
+    </section>
+
+    <section class="workspace">
+      <div class="phone-frame">
+        <div id="captureArea" class="scripture-page">
+          <article id="scriptureText" class="scripture-text"></article>
+
+          <img
+            id="sticker"
+            class="sticker"
+            src="stickers/arrependimento.svg"
+            alt="Sticker digital"
+            draggable="false"
+          />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>V1 experimental — Scripture Stickers / Adesivos das Escrituras</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
