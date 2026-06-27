@@ -9,6 +9,7 @@
   <meta name="theme-color" content="#1f4e5f" />
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
+
 <body>
   <header class="app-header">
     <div>
@@ -40,58 +41,62 @@ Lehi takes his family into the wilderness by the Red Sea—They leave their prop
       <input id="stickerUpload" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" />
 
       <div class="control-group">
-        <div class="control-group">
-  <label for="projectNameInput">Nome do projeto</label>
-  <input
-    id="projectNameInput"
-    type="text"
-    placeholder="Ex: arrependimento-alma-42"
-  />
-</div>
+        <label for="projectNameInput">Nome do projeto</label>
+        <input
+          id="projectNameInput"
+          type="text"
+          placeholder="Ex: arrependimento-alma-42"
+        />
+      </div>
+
+      <div class="control-group">
         <label for="backgroundSelect">Fundo:</label>
-<select id="backgroundSelect">
-  <option value="white">Branco</option>
-  <option value="cream">Creme</option>
-  <option value="blue">Azul claro</option>
-  <option value="pink">Rosa/lilás claro</option>
-  <option value="peach">Pêssego</option>
-</select>
+        <select id="backgroundSelect">
+          <option value="white">Branco</option>
+          <option value="cream">Creme</option>
+          <option value="blue">Azul claro</option>
+          <option value="pink">Rosa/lilás claro</option>
+          <option value="peach">Pêssego</option>
+        </select>
+      </div>
+
+      <div class="control-group">
         <label for="opacityRange">Transparência</label>
         <input id="opacityRange" type="range" min="5" max="100" value="45" />
         <span id="opacityValue">45%</span>
       </div>
 
-     <div class="control-group">
-  <label for="sizeRange">Tamanho</label>
-  <input id="sizeRange" type="range" min="60" max="520" value="210" />
-  <span id="sizeValue">210 px</span>
-</div>
+      <div class="control-group">
+        <label for="sizeRange">Tamanho</label>
+        <input id="sizeRange" type="range" min="60" max="520" value="210" />
+        <span id="sizeValue">210 px</span>
+      </div>
 
-<div class="control-group">
-  <label for="edgeSoftnessRange">Suavizar bordas</label>
-  <input type="range" id="edgeSoftnessRange" min="0" max="30" value="0" />
-  <span id="edgeSoftnessValue">0 px</span>
-</div>
+      <div class="control-group">
+        <label for="edgeSoftnessRange">Suavizar bordas</label>
+        <input type="range" id="edgeSoftnessRange" min="0" max="30" value="0" />
+        <span id="edgeSoftnessValue">0 px</span>
+      </div>
 
-<div class="control-group">
-  <label for="colorBoostRange">Intensidade da cor</label>
-  <input type="range" id="colorBoostRange" min="0" max="200" value="100" />
-  <span id="colorBoostValue">100%</span>
-</div>
+      <div class="control-group">
+        <label for="colorBoostRange">Intensidade da cor</label>
+        <input type="range" id="colorBoostRange" min="0" max="200" value="100" />
+        <span id="colorBoostValue">100%</span>
+      </div>
 
       <div class="button-row">
-  <button id="resetStickerBtn">Centralizar</button>
-<button id="newProjectBtn">Novo projeto</button>
-<button id="saveProjectBtn">Guardar projeto</button>
-<button id="loadProjectBtn">Abrir projeto</button>
+        <button id="resetStickerBtn">Centralizar</button>
+        <button id="newProjectBtn">Novo projeto</button>
+        <button id="saveProjectBtn">Guardar projeto</button>
+        <button id="loadProjectBtn">Abrir projeto</button>
 
-<button id="exportProjectBtn">Exportar projeto</button>
-<button id="importProjectBtn">Importar projeto</button>
-<input id="importProjectInput" type="file" accept=".json,application/json" hidden />
+        <button id="exportProjectBtn">Exportar projeto</button>
+        <button id="importProjectBtn">Importar projeto</button>
+        <input id="importProjectInput" type="file" accept=".json,application/json" hidden />
 
-<button id="exportBtn" class="primary-btn">Salvar imagem</button>
-<button id="shareBtn" class="primary-btn">Compartilhar</button>
-</div>
+        <button id="exportBtn" class="primary-btn">Salvar imagem</button>
+        <button id="shareBtn" class="primary-btn">Compartilhar</button>
+      </div>
 
       <p class="note">
         Ajuste o sticker sobre o texto usando tamanho, posição e transparência.
@@ -114,6 +119,14 @@ Lehi takes his family into the wilderness by the Red Sea—They leave their prop
       </div>
     </section>
   </main>
+
+  <nav class="mobile-bottom-nav">
+    <a href="#captureArea">Vista</a>
+    <a href="#scriptureInput">Texto</a>
+    <a href="#stickerUpload">Sticker</a>
+    <a href="#opacityRange">Ajustes</a>
+    <a href="#exportBtn">Salvar</a>
+  </nav>
 
   <footer class="app-footer">
     <p>V1 experimental — Scripture Stickers / Adesivos das Escrituras</p>
