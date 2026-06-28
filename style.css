@@ -50,7 +50,7 @@ body {
   font-size: 0.95rem;
 }
 
-/* Layout */
+/* Layout desktop */
 .layout {
   display: grid;
   grid-template-columns: 360px 1fr;
@@ -75,6 +75,14 @@ body {
 
 .controls-panel h2:first-child {
   margin-top: 0;
+}
+
+.mobile-drawer-header {
+  display: none;
+}
+
+.mobile-panel-block {
+  display: block;
 }
 
 label {
@@ -312,95 +320,9 @@ button.primary-btn.guided-glow {
   }
 }
 
-/* Menú inferior para celular */
+/* Menú inferior móvil */
 .mobile-bottom-nav {
   display: none;
-}
-
-/* Tablet y celular */
-@media (max-width: 850px) {
-  body {
-    padding-bottom: 78px;
-  }
-
-  .layout {
-    grid-template-columns: 1fr;
-    padding: 16px;
-  }
-
-  .workspace {
-    order: -1;
-  }
-
-  .phone-frame {
-    width: min(430px, 100%);
-  }
-
-  .panel {
-    padding: 18px;
-  }
-
-  button {
-    padding: 12px 16px;
-  }
-
-  .mobile-bottom-nav {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 999;
-    display: flex;
-    justify-content: space-around;
-    gap: 4px;
-    padding: 8px 6px;
-    background: #fffdf8;
-    border-top: 1px solid #d8d0be;
-    box-shadow: 0 -8px 24px rgba(45, 35, 20, 0.12);
-  }
-
-  .mobile-bottom-nav a {
-    flex: 1;
-    text-align: center;
-    text-decoration: none;
-    color: #103844;
-    font-weight: 700;
-    font-size: 0.82rem;
-    padding: 10px 4px;
-    border-radius: 12px;
-    background: #f8f1e3;
-    border: 1px solid #d8d0be;
-  }
-
-  .mobile-bottom-nav a:active {
-    background: #eafffb;
-    border-color: #00d6b4;
-  }
-}
-
-@media (max-width: 480px) {
-  .app-header {
-    padding: 16px;
-  }
-
-  .layout {
-    padding: 12px;
-    gap: 16px;
-  }
-
-  .scripture-page {
-    min-height: 640px;
-    padding: 34px 26px;
-  }
-
-  .scripture-text {
-    font-size: 15px;
-    line-height: 1.58;
-  }
-
-  textarea {
-    min-height: 220px;
-  }
 }
 
 /* Fondos del área de lectura */
@@ -422,4 +344,157 @@ button.primary-btn.guided-glow {
 
 #captureArea.bg-peach {
   background: #ffd9c7;
+}
+
+/* Tablet y celular */
+@media (max-width: 850px) {
+  body {
+    padding-bottom: 78px;
+  }
+
+  .app-header {
+    padding: 16px;
+  }
+
+  .layout {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    gap: 14px;
+  }
+
+  .workspace {
+    order: -1;
+    width: 100%;
+  }
+
+  .phone-frame {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .scripture-page {
+    min-height: 70vh;
+    padding: 34px 26px;
+  }
+
+  .scripture-text {
+    font-size: 15px;
+    line-height: 1.58;
+  }
+
+  textarea {
+    min-height: 220px;
+  }
+
+  /* Drawer móvil */
+  .controls-panel.mobile-drawer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 70px;
+    z-index: 998;
+    max-height: 62vh;
+    overflow-y: auto;
+    border-radius: 22px 22px 0 0;
+    padding: 16px;
+    transform: translateY(115%);
+    transition: transform 0.22s ease;
+    box-shadow: 0 -16px 36px rgba(45, 35, 20, 0.20);
+  }
+
+  .controls-panel.mobile-drawer.is-open {
+    transform: translateY(0);
+  }
+
+  .mobile-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .mobile-drawer-close {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .mobile-panel-block {
+    display: none;
+  }
+
+  .mobile-panel-block.is-active {
+    display: block;
+  }
+
+  .button-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  button {
+    padding: 12px 14px;
+  }
+
+  /* Barra inferior */
+  .mobile-bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+    display: flex;
+    justify-content: space-around;
+    gap: 4px;
+    padding: 8px 6px;
+    background: #fffdf8;
+    border-top: 1px solid #d8d0be;
+    box-shadow: 0 -8px 24px rgba(45, 35, 20, 0.12);
+  }
+
+  .mobile-bottom-nav button {
+    flex: 1;
+    text-align: center;
+    color: #103844;
+    font-weight: 700;
+    font-size: 0.78rem;
+    padding: 10px 4px;
+    border-radius: 12px;
+    background: #f8f1e3;
+    border: 1px solid #d8d0be;
+    box-shadow: none;
+  }
+
+  .mobile-bottom-nav button:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .mobile-bottom-nav button.is-active,
+  .mobile-bottom-nav button:active {
+    background: #eafffb;
+    border-color: #00d6b4;
+  }
+
+  .app-footer {
+    padding-bottom: 88px;
+  }
+}
+
+@media (max-width: 480px) {
+  .scripture-page {
+    min-height: 72vh;
+    padding: 32px 24px;
+  }
+
+  .controls-panel.mobile-drawer {
+    max-height: 64vh;
+  }
+
+  .button-row {
+    grid-template-columns: 1fr;
+  }
 }
