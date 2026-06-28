@@ -787,3 +787,86 @@ window.addEventListener("load", () => {
     updateGuideGlow();
   }
 });
+/* Panel móvil inferior */
+const controlsDrawer = document.getElementById("controlsDrawer");
+const closeDrawerBtn = document.getElementById("closeDrawerBtn");
+const mobileDrawerTitle = document.getElementById("mobileDrawerTitle");
+const mobilePanelBlocks = document.querySelectorAll(".mobile-panel-block");
+const mobileNavButtons = document.querySelectorAll(".mobile-bottom-nav button");
+
+const mobilePanelTitles = {
+  text: "Texto",
+  sticker: "Sticker",
+  adjust: "Ajustes",
+  actions: "Ações"
+};
+
+function isMobileView() {
+  return window.matchMedia("(max-width: 850px)").matches;
+}
+
+function closeMobileDrawer() {
+  if (!controlsDrawer) return;
+
+  controlsDrawer.classList.remove("is-open");
+
+  mobilePanelBlocks.forEach((block) => {
+    block.classList.remove("is-active");
+  });
+
+  mobileNavButtons.forEach((button) => {
+    button.classList.remove("is-active");
+  });
+}
+
+function openMobilePanel(panelName) {
+  if (!controlsDrawer) return;
+
+  mobilePanelBlocks.forEach((block) => {
+    block.classList.toggle("is-active", block.dataset.panel === panelName);
+  });
+
+  mobileNavButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.mobilePanel === panelName);
+  });
+
+  if (mobileDrawerTitle) {
+    mobileDrawerTitle.textContent = mobilePanelTitles[panelName] || "Controles";
+  }
+
+  controlsDrawer.classList.add("is-open");
+}
+
+mobileNavButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const panelName = button.dataset.mobilePanel;
+    const actionName = button.dataset.mobileAction;
+
+    if (actionName === "view") {
+      closeMobileDrawer();
+
+      captureArea.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
+      return;
+    }
+
+    if (panelName) {
+      openMobilePanel(panelName);
+    }
+  });
+});
+
+if (closeDrawerBtn) {
+  closeDrawerBtn.addEventListener("click", () => {
+    closeMobileDrawer();
+  });
+}
+
+window.addEventListener("resize", () => {
+  if (!isMobileView()) {
+    closeMobileDrawer();
+  }
+});
