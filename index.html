@@ -19,11 +19,17 @@
   </header>
 
   <main class="layout">
-    <section class="panel controls-panel">
-      <h2>1. Texto</h2>
+    <section class="panel controls-panel mobile-drawer" id="controlsDrawer">
+      <div class="mobile-drawer-header">
+        <strong id="mobileDrawerTitle">Controles</strong>
+        <button id="closeDrawerBtn" type="button" class="mobile-drawer-close">Fechar</button>
+      </div>
 
-      <label for="scriptureInput">Cole aqui o texto da escritura</label>
-      <textarea id="scriptureInput" spellcheck="false">Chapter 2
+      <div class="mobile-panel-block" data-panel="text">
+        <h2>1. Texto</h2>
+
+        <label for="scriptureInput">Cole aqui o texto da escritura</label>
+        <textarea id="scriptureInput" spellcheck="false">Chapter 2
 
 Lehi takes his family into the wilderness by the Red Sea—They leave their property—Lehi offers a sacrifice to the Lord and teaches his sons to keep the commandments—Laman and Lemuel murmur against their father—Nephi is obedient and prays in faith; the Lord speaks to him, and he is chosen to rule over his brethren. About 600 B.C.
 
@@ -33,69 +39,81 @@ Lehi takes his family into the wilderness by the Red Sea—They leave their prop
 
 3 And it came to pass that he was obedient unto the word of the Lord, wherefore he did as the Lord commanded him.</textarea>
 
-      <button id="applyTextBtn" class="primary-btn">Aplicar texto</button>
-
-      <h2>2. Sticker</h2>
-
-      <label for="stickerUpload">Carregar sticker transparente</label>
-      <input id="stickerUpload" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" />
-
-      <div class="control-group">
-        <label for="projectNameInput">Nome do projeto</label>
-        <input
-          id="projectNameInput"
-          type="text"
-          placeholder="Ex: arrependimento-alma-42"
-        />
+        <button id="applyTextBtn" class="primary-btn">Aplicar texto</button>
       </div>
 
-      <div class="control-group">
-        <label for="backgroundSelect">Fundo:</label>
-        <select id="backgroundSelect">
-          <option value="white">Branco</option>
-          <option value="cream">Creme</option>
-          <option value="blue">Azul claro</option>
-          <option value="pink">Rosa/lilás claro</option>
-          <option value="peach">Pêssego</option>
-        </select>
-      </div>
+      <div class="mobile-panel-block" data-panel="sticker">
+        <h2>2. Sticker</h2>
 
-      <div class="control-group">
-        <label for="opacityRange">Transparência</label>
-        <input id="opacityRange" type="range" min="5" max="100" value="45" />
-        <span id="opacityValue">45%</span>
-      </div>
+        <label for="stickerUpload">Carregar sticker transparente</label>
+        <input id="stickerUpload" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" />
 
-      <div class="control-group">
-        <label for="sizeRange">Tamanho</label>
-        <input id="sizeRange" type="range" min="60" max="520" value="210" />
-        <span id="sizeValue">210 px</span>
-      </div>
+        <div class="control-group">
+          <label for="projectNameInput">Nome do projeto</label>
+          <input
+            id="projectNameInput"
+            type="text"
+            placeholder="Ex: arrependimento-alma-42"
+          />
+        </div>
 
-      <div class="control-group">
-        <label for="edgeSoftnessRange">Suavizar bordas</label>
-        <input type="range" id="edgeSoftnessRange" min="0" max="30" value="0" />
-        <span id="edgeSoftnessValue">0 px</span>
-      </div>
+        <div class="control-group">
+          <label for="backgroundSelect">Fundo:</label>
+          <select id="backgroundSelect">
+            <option value="white">Branco</option>
+            <option value="cream">Creme</option>
+            <option value="blue">Azul claro</option>
+            <option value="pink">Rosa/lilás claro</option>
+            <option value="peach">Pêssego</option>
+          </select>
+        </div>
 
-      <div class="control-group">
-        <label for="colorBoostRange">Intensidade da cor</label>
-        <input type="range" id="colorBoostRange" min="0" max="200" value="100" />
-        <span id="colorBoostValue">100%</span>
-      </div>
-
-      <div class="button-row">
         <button id="resetStickerBtn">Centralizar</button>
-        <button id="newProjectBtn">Novo projeto</button>
-        <button id="saveProjectBtn">Guardar projeto</button>
-        <button id="loadProjectBtn">Abrir projeto</button>
+      </div>
 
-        <button id="exportProjectBtn">Exportar projeto</button>
-        <button id="importProjectBtn">Importar projeto</button>
-        <input id="importProjectInput" type="file" accept=".json,application/json" hidden />
+      <div class="mobile-panel-block" data-panel="adjust">
+        <h2>3. Ajustes</h2>
 
-        <button id="exportBtn" class="primary-btn">Salvar imagem</button>
-        <button id="shareBtn" class="primary-btn">Compartilhar</button>
+        <div class="control-group">
+          <label for="opacityRange">Transparência</label>
+          <input id="opacityRange" type="range" min="5" max="100" value="45" />
+          <span id="opacityValue">45%</span>
+        </div>
+
+        <div class="control-group">
+          <label for="sizeRange">Tamanho</label>
+          <input id="sizeRange" type="range" min="60" max="520" value="210" />
+          <span id="sizeValue">210 px</span>
+        </div>
+
+        <div class="control-group">
+          <label for="edgeSoftnessRange">Suavizar bordas</label>
+          <input type="range" id="edgeSoftnessRange" min="0" max="30" value="0" />
+          <span id="edgeSoftnessValue">0 px</span>
+        </div>
+
+        <div class="control-group">
+          <label for="colorBoostRange">Intensidade da cor</label>
+          <input type="range" id="colorBoostRange" min="0" max="200" value="100" />
+          <span id="colorBoostValue">100%</span>
+        </div>
+      </div>
+
+      <div class="mobile-panel-block" data-panel="actions">
+        <h2>4. Ações</h2>
+
+        <div class="button-row">
+          <button id="newProjectBtn">Novo projeto</button>
+          <button id="saveProjectBtn">Guardar projeto</button>
+          <button id="loadProjectBtn">Abrir projeto</button>
+
+          <button id="exportProjectBtn">Exportar projeto</button>
+          <button id="importProjectBtn">Importar projeto</button>
+          <input id="importProjectInput" type="file" accept=".json,application/json" hidden />
+
+          <button id="exportBtn" class="primary-btn">Salvar imagem</button>
+          <button id="shareBtn" class="primary-btn">Compartilhar</button>
+        </div>
       </div>
 
       <p class="note">
@@ -121,11 +139,11 @@ Lehi takes his family into the wilderness by the Red Sea—They leave their prop
   </main>
 
   <nav class="mobile-bottom-nav">
-    <a href="#captureArea">Vista</a>
-    <a href="#scriptureInput">Texto</a>
-    <a href="#stickerUpload">Sticker</a>
-    <a href="#opacityRange">Ajustes</a>
-    <a href="#exportBtn">Salvar</a>
+    <button type="button" data-mobile-action="view">Vista</button>
+    <button type="button" data-mobile-panel="text">Texto</button>
+    <button type="button" data-mobile-panel="sticker">Sticker</button>
+    <button type="button" data-mobile-panel="adjust">Ajustes</button>
+    <button type="button" data-mobile-panel="actions">Ações</button>
   </nav>
 
   <footer class="app-footer">
