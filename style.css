@@ -328,6 +328,34 @@ button.primary-btn.guided-glow {
   }
 }
 
+/* Parpadeo verde para iniciar nuevo proyecto */
+@keyframes neonStartPulse {
+  0% {
+    box-shadow:
+      0 0 8px rgba(0, 255, 150, 0.35),
+      0 0 18px rgba(0, 255, 180, 0.22);
+    border-color: rgba(0, 255, 180, 0.45);
+    background: rgba(0, 166, 255, 0.12);
+  }
+
+  50% {
+    box-shadow:
+      0 0 14px rgba(0, 255, 150, 0.95),
+      0 0 32px rgba(0, 255, 180, 0.70),
+      0 0 58px rgba(0, 214, 120, 0.42);
+    border-color: rgba(0, 255, 180, 0.95);
+    background: rgba(0, 255, 150, 0.30);
+  }
+
+  100% {
+    box-shadow:
+      0 0 8px rgba(0, 255, 150, 0.35),
+      0 0 18px rgba(0, 255, 180, 0.22);
+    border-color: rgba(0, 255, 180, 0.45);
+    background: rgba(0, 166, 255, 0.12);
+  }
+}
+
 /* Menú flotante: oculto en desktop */
 .mobile-menu-trigger,
 .floating-toolbar,
@@ -515,6 +543,13 @@ button.primary-btn.guided-glow {
 
   .mobile-menu-trigger:hover {
     transform: none;
+  }
+
+  .mobile-menu-trigger.start-glow {
+    color: #ffffff;
+    background: rgba(0, 255, 150, 0.30);
+    border-color: rgba(0, 255, 180, 0.95);
+    animation: neonStartPulse 1.25s ease-in-out infinite;
   }
 
   /* Menú principal: azul eléctrico translúcido sin blur */
