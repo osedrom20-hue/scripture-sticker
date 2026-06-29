@@ -31,6 +31,20 @@ const colorBoostValue = document.getElementById("colorBoostValue");
 
 const captureArea = document.getElementById("captureArea");
 
+const controlsDrawer = document.getElementById("controlsDrawer");
+const closeDrawerBtn = document.getElementById("closeDrawerBtn");
+const mobileDrawerTitle = document.getElementById("mobileDrawerTitle");
+const mobilePanelBlocks = document.querySelectorAll(".mobile-panel-block");
+
+const mobileMenuTrigger = document.getElementById("mobileMenuTrigger");
+const floatingToolbar = document.getElementById("floatingToolbar");
+const floatingToolbarButtons = document.querySelectorAll(".floating-toolbar button");
+const advancedSubmenu = document.getElementById("advancedSubmenu");
+
+const AUTO_OPACITY = "30";
+const AUTO_EDGE_SOFTNESS = "6";
+const AUTO_COLOR_BOOST = "120";
+
 let textStepDone = false;
 let stickerStepDone = false;
 let backgroundStepDone = false;
@@ -46,10 +60,23 @@ let isDragging = false;
 let dragOffsetX = 0;
 let dragOffsetY = 0;
 
-function clearGuideGlow() {
-  const glowingItems = document.querySelectorAll(".guided-glow");
+let longPressTimer = null;
+let longPressStartX = 0;
+let longPressStartY = 0;
 
-  glowingItems.forEach((item) => {
+const mobilePanelTitles = {
+  text: "Texto",
+  sticker: "Sticker",
+  size: "Tamanho",
+  actions: "Ações"
+};
+
+function isMobileView() {
+  return window.matchMedia("(max-width: 850px)").matches;
+}
+
+function clearGuideGlow() {
+  document.querySelectorAll(".guided-glow").forEach((item) => {
     item.classList.remove("guided-glow");
   });
 }
@@ -81,44 +108,13 @@ function updateGuideGlow() {
     return;
   }
 
-  if (!backgroundStepDone) {
-    backgroundSelect.classList.add("guided-glow");
-    return;
-  }
-
-  if (!opacityStepDone) {
-    opacityRange.classList.add("guided-glow");
-    return;
-  }
-
   if (!sizeStepDone) {
     sizeRange.classList.add("guided-glow");
     return;
   }
 
-  if (!edgeStepDone) {
-    edgeSoftnessRange.classList.add("guided-glow");
-    return;
-  }
-
-  if (!colorStepDone) {
-    colorBoostRange.classList.add("guided-glow");
-    return;
-  }
-
-  if (!projectStepDone) {
-    saveProjectBtn.classList.add("guided-glow");
-    return;
-  }
-
   if (!exportStepDone) {
     exportBtn.classList.add("guided-glow");
-    return;
-  }
-
-  if (!shareStepDone) {
-    shareBtn.classList.add("guided-glow");
-    return;
   }
 }
 
@@ -233,13 +229,8 @@ function updateStickerEffects(markEdgeStep = false, markColorStep = false) {
     sticker.style.maskComposite = "";
   }
 
-  if (markEdgeStep) {
-    edgeStepDone = true;
-  }
-
-  if (markColorStep) {
-    colorStepDone = true;
-  }
+  if (markEdgeStep) edgeStepDone = true;
+  if (markColorStep) colorStepDone = true;
 
   if (markEdgeStep || markColorStep) {
     projectStepDone = false;
@@ -249,12 +240,33 @@ function updateStickerEffects(markEdgeStep = false, markColorStep = false) {
   }
 }
 
+function applyAutomaticStickerSettings() {
+  opacityRange.value = AUTO_OPACITY;
+  edgeSoftnessRange.value = AUTO_EDGE_SOFTNESS;
+  colorBoostRange.value = AUTO_COLOR_BOOST;
+
+  updateOpacity(false);
+  updateStickerEffects(false, false);
+
+  opacityStepDone = true;
+  edgeStepDone = true;
+  colorStepDone = true;
+}
+
 function centerSticker() {
   const pageRect = captureArea.getBoundingClientRect();
   const stickerWidth = sticker.offsetWidth || Number(sizeRange.value);
 
   sticker.style.left = `${(pageRect.width - stickerWidth) / 2}px`;
   sticker.style.top = `${pageRect.height * 0.48}px`;
+}
+
+function flashCenteredSticker() {
+  sticker.classList.add("center-flash");
+
+  setTimeout(() => {
+    sticker.classList.remove("center-flash");
+  }, 650);
 }
 
 function getPointerPosition(event) {
@@ -281,8 +293,6 @@ function startDrag(event) {
 
   window.addEventListener("pointermove", drag);
   window.addEventListener("pointerup", stopDrag);
-  window.addEventListener("touchmove", drag, { passive: false });
-  window.addEventListener("touchend", stopDrag);
 }
 
 function drag(event) {
@@ -315,8 +325,6 @@ function stopDrag() {
 
   window.removeEventListener("pointermove", drag);
   window.removeEventListener("pointerup", stopDrag);
-  window.removeEventListener("touchmove", drag);
-  window.removeEventListener("touchend", stopDrag);
 
   updateGuideGlow();
 }
@@ -373,13 +381,13 @@ function applyProjectData(projectData, markAsSaved = true) {
   sticker.style.left = projectData.stickerLeft || "110px";
   sticker.style.top = projectData.stickerTop || "330px";
   sticker.style.width = projectData.stickerWidth || "210px";
-  sticker.style.opacity = projectData.stickerOpacity || "0.45";
+  sticker.style.opacity = projectData.stickerOpacity || "0.30";
 
-  opacityRange.value = projectData.opacityRangeValue || "45";
+  opacityRange.value = projectData.opacityRangeValue || AUTO_OPACITY;
   sizeRange.value = projectData.sizeRangeValue || "210";
   backgroundSelect.value = projectData.backgroundValue || "white";
-  edgeSoftnessRange.value = projectData.edgeSoftnessValue || "0";
-  colorBoostRange.value = projectData.colorBoostValue || "100";
+  edgeSoftnessRange.value = projectData.edgeSoftnessValue || AUTO_EDGE_SOFTNESS;
+  colorBoostRange.value = projectData.colorBoostValue || AUTO_COLOR_BOOST;
 
   updateOpacity(false);
   updateSize(false);
@@ -464,12 +472,6 @@ function importProjectFile(event) {
 }
 
 function newProject() {
-  const confirmNewProject = confirm(
-    "Deseja iniciar um novo projeto? O projeto guardado neste navegador será apagado."
-  );
-
-  if (!confirmNewProject) return;
-
   localStorage.removeItem("scriptureStickersProject");
 
   projectNameInput.value = "";
@@ -480,11 +482,11 @@ function newProject() {
   sticker.removeAttribute("src");
   hideSticker();
 
-  opacityRange.value = "45";
+  opacityRange.value = AUTO_OPACITY;
   sizeRange.value = "210";
   backgroundSelect.value = "white";
-  edgeSoftnessRange.value = "0";
-  colorBoostRange.value = "100";
+  edgeSoftnessRange.value = AUTO_EDGE_SOFTNESS;
+  colorBoostRange.value = AUTO_COLOR_BOOST;
 
   updateOpacity(false);
   updateSize(false);
@@ -503,6 +505,7 @@ function newProject() {
   exportStepDone = false;
   shareStepDone = false;
 
+  closeAllFloatingPanels();
   updateGuideGlow();
 }
 
@@ -549,16 +552,16 @@ function loadStickerFromFile(event) {
     sticker.src = loadEvent.target.result;
     showSticker();
     centerSticker();
+    applyAutomaticStickerSettings();
 
     stickerStepDone = true;
-    opacityStepDone = false;
     sizeStepDone = false;
-    edgeStepDone = false;
-    colorStepDone = false;
     projectStepDone = false;
     exportStepDone = false;
     shareStepDone = false;
 
+    closeMobileDrawer();
+    closeAdvancedSubmenu();
     updateGuideGlow();
   };
 
@@ -614,6 +617,8 @@ function downloadCanvas(canvas) {
 
 async function exportImage() {
   try {
+    closeAllFloatingPanels();
+
     const canvas = await createExportCanvas();
 
     downloadCanvas(canvas);
@@ -629,6 +634,8 @@ async function exportImage() {
 
 async function shareImage() {
   try {
+    closeAllFloatingPanels();
+
     const canvas = await createExportCanvas();
 
     const blob = await new Promise((resolve) => {
@@ -637,7 +644,6 @@ async function shareImage() {
 
     if (!blob) {
       alert("Não foi possível preparar a imagem para compartilhar.");
-
       return false;
     }
 
@@ -667,8 +673,127 @@ async function shareImage() {
   }
 }
 
+function closeMobileDrawer() {
+  if (!controlsDrawer) return;
+
+  controlsDrawer.classList.remove("is-open");
+
+  mobilePanelBlocks.forEach((block) => {
+    block.classList.remove("is-active");
+  });
+
+  floatingToolbarButtons.forEach((button) => {
+    if (button.dataset.directAction !== "advanced") {
+      button.classList.remove("is-active");
+    }
+  });
+}
+
+function openMobilePanel(panelName) {
+  if (!controlsDrawer || !isMobileView()) return;
+
+  closeAdvancedSubmenu();
+
+  mobilePanelBlocks.forEach((block) => {
+    block.classList.toggle("is-active", block.dataset.panel === panelName);
+  });
+
+  floatingToolbarButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.mobilePanel === panelName);
+  });
+
+  if (mobileDrawerTitle) {
+    mobileDrawerTitle.textContent = mobilePanelTitles[panelName] || "Controles";
+  }
+
+  controlsDrawer.classList.add("is-open");
+}
+
+function closeAdvancedSubmenu() {
+  if (!advancedSubmenu) return;
+
+  advancedSubmenu.classList.remove("is-open");
+  advancedSubmenu.setAttribute("aria-hidden", "true");
+
+  floatingToolbarButtons.forEach((button) => {
+    if (button.dataset.directAction === "advanced") {
+      button.classList.remove("is-active");
+    }
+  });
+}
+
+function openAdvancedSubmenu() {
+  if (!advancedSubmenu || !isMobileView()) return;
+
+  closeMobileDrawer();
+
+  advancedSubmenu.classList.add("is-open");
+  advancedSubmenu.setAttribute("aria-hidden", "false");
+
+  floatingToolbarButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.directAction === "advanced");
+  });
+}
+
+function toggleAdvancedSubmenu() {
+  if (!advancedSubmenu) return;
+
+  if (advancedSubmenu.classList.contains("is-open")) {
+    closeAdvancedSubmenu();
+  } else {
+    openAdvancedSubmenu();
+  }
+}
+
+function closeFloatingToolbar() {
+  if (!floatingToolbar) return;
+
+  floatingToolbar.classList.remove("is-open");
+  floatingToolbar.setAttribute("aria-hidden", "true");
+
+  floatingToolbarButtons.forEach((button) => {
+    button.classList.remove("is-active");
+  });
+}
+
+function openFloatingToolbar() {
+  if (!floatingToolbar || !isMobileView()) return;
+
+  floatingToolbar.classList.add("is-open");
+  floatingToolbar.setAttribute("aria-hidden", "false");
+}
+
+function toggleFloatingToolbar() {
+  if (!floatingToolbar) return;
+
+  if (floatingToolbar.classList.contains("is-open")) {
+    closeFloatingToolbar();
+    closeMobileDrawer();
+    closeAdvancedSubmenu();
+  } else {
+    openFloatingToolbar();
+  }
+}
+
+function closeAllFloatingPanels() {
+  closeMobileDrawer();
+  closeAdvancedSubmenu();
+  closeFloatingToolbar();
+}
+
+function clearLongPressTimer() {
+  if (longPressTimer) {
+    clearTimeout(longPressTimer);
+    longPressTimer = null;
+  }
+}
+
 applyTextBtn.addEventListener("click", () => {
   applyText();
+
+  if (isMobileView()) {
+    closeMobileDrawer();
+  }
 });
 
 scriptureInput.addEventListener("input", () => {
@@ -696,36 +821,25 @@ projectNameInput.addEventListener("input", () => {
 stickerUpload.addEventListener("change", loadStickerFromFile);
 
 sticker.addEventListener("pointerdown", startDrag);
-sticker.addEventListener("touchstart", startDrag, { passive: false });
 
 resetStickerBtn.addEventListener("click", () => {
   centerSticker();
+  flashCenteredSticker();
   projectStepDone = false;
   exportStepDone = false;
   shareStepDone = false;
   updateGuideGlow();
+
+  if (isMobileView()) {
+    closeMobileDrawer();
+  }
 });
 
-newProjectBtn.addEventListener("click", () => {
-  newProject();
-});
-
-saveProjectBtn.addEventListener("click", () => {
-  saveProject();
-});
-
-loadProjectBtn.addEventListener("click", () => {
-  loadProject(true);
-});
-
-exportProjectBtn.addEventListener("click", () => {
-  exportProjectFile();
-});
-
-importProjectBtn.addEventListener("click", () => {
-  importProjectInput.click();
-});
-
+newProjectBtn.addEventListener("click", newProject);
+saveProjectBtn.addEventListener("click", saveProject);
+loadProjectBtn.addEventListener("click", () => loadProject(true));
+exportProjectBtn.addEventListener("click", exportProjectFile);
+importProjectBtn.addEventListener("click", () => importProjectInput.click());
 importProjectInput.addEventListener("change", importProjectFile);
 
 backgroundSelect.addEventListener("change", () => {
@@ -738,6 +852,12 @@ opacityRange.addEventListener("input", () => {
 
 sizeRange.addEventListener("input", () => {
   updateSize(true);
+});
+
+sizeRange.addEventListener("change", () => {
+  if (isMobileView()) {
+    closeMobileDrawer();
+  }
 });
 
 edgeSoftnessRange.addEventListener("input", () => {
@@ -766,14 +886,125 @@ shareBtn.addEventListener("click", async () => {
   }
 });
 
+if (mobileMenuTrigger) {
+  mobileMenuTrigger.addEventListener("click", () => {
+    toggleFloatingToolbar();
+  });
+}
+
+floatingToolbarButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const panelName = button.dataset.mobilePanel;
+    const directAction = button.dataset.directAction;
+
+    if (panelName) {
+      openMobilePanel(panelName);
+      return;
+    }
+
+    if (directAction === "center") {
+      centerSticker();
+      flashCenteredSticker();
+      sizeStepDone = true;
+      projectStepDone = false;
+      exportStepDone = false;
+      shareStepDone = false;
+      closeMobileDrawer();
+      closeAdvancedSubmenu();
+      updateGuideGlow();
+      return;
+    }
+
+    if (directAction === "advanced") {
+      toggleAdvancedSubmenu();
+      return;
+    }
+
+    if (directAction === "save") {
+      exportBtn.click();
+      return;
+    }
+
+    if (directAction === "share") {
+      shareBtn.click();
+      return;
+    }
+
+    if (directAction === "close") {
+      closeAllFloatingPanels();
+    }
+  });
+});
+
+if (closeDrawerBtn) {
+  closeDrawerBtn.addEventListener("click", () => {
+    closeMobileDrawer();
+  });
+}
+
+captureArea.addEventListener("pointerdown", (event) => {
+  if (!isMobileView()) return;
+
+  longPressStartX = event.clientX;
+  longPressStartY = event.clientY;
+
+  clearLongPressTimer();
+
+  longPressTimer = setTimeout(() => {
+    openFloatingToolbar();
+  }, 1000);
+});
+
+captureArea.addEventListener("pointermove", (event) => {
+  if (!longPressTimer) return;
+
+  const moveX = Math.abs(event.clientX - longPressStartX);
+  const moveY = Math.abs(event.clientY - longPressStartY);
+
+  if (moveX > 10 || moveY > 10) {
+    clearLongPressTimer();
+  }
+});
+
+captureArea.addEventListener("pointerup", () => {
+  clearLongPressTimer();
+});
+
+captureArea.addEventListener("pointercancel", () => {
+  clearLongPressTimer();
+});
+
 document.addEventListener("click", (event) => {
   if (event.target !== sticker) {
     sticker.classList.remove("selected");
+  }
+
+  if (!isMobileView()) return;
+
+  const clickedToolbar = floatingToolbar && floatingToolbar.contains(event.target);
+  const clickedDrawer = controlsDrawer && controlsDrawer.contains(event.target);
+  const clickedAdvanced = advancedSubmenu && advancedSubmenu.contains(event.target);
+  const clickedTrigger = mobileMenuTrigger && mobileMenuTrigger.contains(event.target);
+
+  if (!clickedToolbar && !clickedDrawer && !clickedAdvanced && !clickedTrigger) {
+    closeMobileDrawer();
+    closeAdvancedSubmenu();
+  }
+});
+
+window.addEventListener("resize", () => {
+  if (!isMobileView()) {
+    closeAllFloatingPanels();
   }
 });
 
 window.addEventListener("load", () => {
   hideSticker();
+
+  opacityRange.value = AUTO_OPACITY;
+  edgeSoftnessRange.value = AUTO_EDGE_SOFTNESS;
+  colorBoostRange.value = AUTO_COLOR_BOOST;
+
   updateOpacity(false);
   updateSize(false);
   applyBackground(false);
@@ -785,88 +1016,5 @@ window.addEventListener("load", () => {
     applyText();
     centerSticker();
     updateGuideGlow();
-  }
-});
-/* Panel móvil inferior */
-const controlsDrawer = document.getElementById("controlsDrawer");
-const closeDrawerBtn = document.getElementById("closeDrawerBtn");
-const mobileDrawerTitle = document.getElementById("mobileDrawerTitle");
-const mobilePanelBlocks = document.querySelectorAll(".mobile-panel-block");
-const mobileNavButtons = document.querySelectorAll(".mobile-bottom-nav button");
-
-const mobilePanelTitles = {
-  text: "Texto",
-  sticker: "Sticker",
-  adjust: "Ajustes",
-  actions: "Ações"
-};
-
-function isMobileView() {
-  return window.matchMedia("(max-width: 850px)").matches;
-}
-
-function closeMobileDrawer() {
-  if (!controlsDrawer) return;
-
-  controlsDrawer.classList.remove("is-open");
-
-  mobilePanelBlocks.forEach((block) => {
-    block.classList.remove("is-active");
-  });
-
-  mobileNavButtons.forEach((button) => {
-    button.classList.remove("is-active");
-  });
-}
-
-function openMobilePanel(panelName) {
-  if (!controlsDrawer) return;
-
-  mobilePanelBlocks.forEach((block) => {
-    block.classList.toggle("is-active", block.dataset.panel === panelName);
-  });
-
-  mobileNavButtons.forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.mobilePanel === panelName);
-  });
-
-  if (mobileDrawerTitle) {
-    mobileDrawerTitle.textContent = mobilePanelTitles[panelName] || "Controles";
-  }
-
-  controlsDrawer.classList.add("is-open");
-}
-
-mobileNavButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const panelName = button.dataset.mobilePanel;
-    const actionName = button.dataset.mobileAction;
-
-    if (actionName === "view") {
-      closeMobileDrawer();
-
-      captureArea.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
-
-      return;
-    }
-
-    if (panelName) {
-      openMobilePanel(panelName);
-    }
-  });
-});
-
-if (closeDrawerBtn) {
-  closeDrawerBtn.addEventListener("click", () => {
-    closeMobileDrawer();
-  });
-}
-
-window.addEventListener("resize", () => {
-  if (!isMobileView()) {
-    closeMobileDrawer();
   }
 });
