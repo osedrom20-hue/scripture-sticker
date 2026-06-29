@@ -26,7 +26,7 @@
       </div>
 
       <div class="mobile-panel-block" data-panel="text">
-        <h2>1. Texto</h2>
+        <h2>Texto</h2>
 
         <label for="scriptureInput">Cole aqui o texto da escritura</label>
         <textarea id="scriptureInput" spellcheck="false">Chapter 2
@@ -39,11 +39,14 @@ Lehi takes his family into the wilderness by the Red Sea—They leave their prop
 
 3 And it came to pass that he was obedient unto the word of the Lord, wherefore he did as the Lord commanded him.</textarea>
 
-        <button id="applyTextBtn" class="primary-btn">Aplicar texto</button>
+        <div class="button-row">
+          <button id="applyTextBtn" class="primary-btn">Aplicar texto</button>
+          <button id="newProjectBtn" type="button">Novo projeto</button>
+        </div>
       </div>
 
       <div class="mobile-panel-block" data-panel="sticker">
-        <h2>2. Sticker</h2>
+        <h2>Sticker</h2>
 
         <label for="stickerUpload">Carregar sticker transparente</label>
         <input id="stickerUpload" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" />
@@ -58,7 +61,7 @@ Lehi takes his family into the wilderness by the Red Sea—They leave their prop
         </div>
 
         <div class="control-group">
-          <label for="backgroundSelect">Fundo:</label>
+          <label for="backgroundSelect">Fundo</label>
           <select id="backgroundSelect">
             <option value="white">Branco</option>
             <option value="cream">Creme</option>
@@ -68,60 +71,41 @@ Lehi takes his family into the wilderness by the Red Sea—They leave their prop
           </select>
         </div>
 
-        <button id="resetStickerBtn">Centralizar</button>
+        <button id="resetStickerBtn" type="button">Centralizar sticker</button>
       </div>
 
-      <div class="mobile-panel-block" data-panel="adjust">
-        <h2>3. Ajustes</h2>
+      <div class="mobile-panel-block" data-panel="size">
+        <h2>Tamanho</h2>
 
         <div class="control-group">
-          <label for="opacityRange">Transparência</label>
-          <input id="opacityRange" type="range" min="5" max="100" value="45" />
-          <span id="opacityValue">45%</span>
-        </div>
-
-        <div class="control-group">
-          <label for="sizeRange">Tamanho</label>
+          <label for="sizeRange">Tamanho do sticker</label>
           <input id="sizeRange" type="range" min="60" max="520" value="210" />
           <span id="sizeValue">210 px</span>
-        </div>
-
-        <div class="control-group">
-          <label for="edgeSoftnessRange">Suavizar bordas</label>
-          <input type="range" id="edgeSoftnessRange" min="0" max="30" value="0" />
-          <span id="edgeSoftnessValue">0 px</span>
-        </div>
-
-        <div class="control-group">
-          <label for="colorBoostRange">Intensidade da cor</label>
-          <input type="range" id="colorBoostRange" min="0" max="200" value="100" />
-          <span id="colorBoostValue">100%</span>
         </div>
       </div>
 
       <div class="mobile-panel-block" data-panel="actions">
-        <h2>4. Ações</h2>
+        <h2>Ações</h2>
 
         <div class="button-row">
-          <button id="newProjectBtn">Novo projeto</button>
-          <button id="saveProjectBtn">Guardar projeto</button>
-          <button id="loadProjectBtn">Abrir projeto</button>
+          <button id="saveProjectBtn" type="button">Guardar projeto</button>
+          <button id="loadProjectBtn" type="button">Abrir projeto</button>
 
-          <button id="exportProjectBtn">Exportar projeto</button>
-          <button id="importProjectBtn">Importar projeto</button>
+          <button id="exportProjectBtn" type="button">Exportar projeto</button>
+          <button id="importProjectBtn" type="button">Importar projeto</button>
           <input id="importProjectInput" type="file" accept=".json,application/json" hidden />
 
-          <button id="exportBtn" class="primary-btn">Salvar imagem</button>
-          <button id="shareBtn" class="primary-btn">Compartilhar</button>
+          <button id="exportBtn" type="button" class="primary-btn">Salvar imagem</button>
+          <button id="shareBtn" type="button" class="primary-btn">Compartilhar</button>
         </div>
       </div>
 
       <p class="note">
-        Ajuste o sticker sobre o texto usando tamanho, posição e transparência.
+        Ajuste o sticker sobre o texto. No modo simples, use apenas tamanho e posição.
       </p>
     </section>
 
-    <section class="workspace">
+    <section class="workspace" id="editorStage">
       <div class="phone-frame">
         <div id="captureArea" class="scripture-page">
           <article id="scriptureText" class="scripture-text"></article>
@@ -135,16 +119,66 @@ Lehi takes his family into the wilderness by the Red Sea—They leave their prop
           />
         </div>
       </div>
+
+      <button id="mobileMenuTrigger" class="mobile-menu-trigger" type="button" aria-label="Abrir menu">
+        ✦
+      </button>
+
+      <nav id="floatingToolbar" class="floating-toolbar" aria-hidden="true">
+        <button type="button" data-mobile-panel="text" title="Texto">
+          <img src="icons/menu/icons8-paste-as-text-50.png" alt="Texto" />
+        </button>
+
+        <button type="button" data-mobile-panel="sticker" title="Sticker">
+          <img src="icons/menu/icons8-sticker-64.png" alt="Sticker" />
+        </button>
+
+        <button type="button" data-mobile-panel="size" title="Tamanho">
+          <img src="icons/menu/icons8-resize-64.png" alt="Tamanho" />
+        </button>
+
+        <button type="button" data-direct-action="center" title="Centralizar">
+          <img src="icons/menu/icons8-center-64.png" alt="Centralizar" />
+        </button>
+
+        <button type="button" data-direct-action="advanced" title="Ajustes avançados">
+          <img src="icons/menu/icons8-setting-58.png" alt="Ajustes" />
+        </button>
+
+        <button type="button" data-direct-action="save" title="Salvar">
+          <img src="icons/menu/icons8-save-as-94.png" alt="Salvar" />
+        </button>
+
+        <button type="button" data-direct-action="share" title="Compartilhar">
+          <img src="icons/menu/icons8-share-48.png" alt="Compartilhar" />
+        </button>
+
+        <button type="button" data-direct-action="close" title="Fechar">
+          <img src="icons/menu/icons8-close-94.png" alt="Fechar" />
+        </button>
+      </nav>
+
+      <div id="advancedSubmenu" class="advanced-submenu" aria-hidden="true">
+        <div class="control-group">
+          <label for="opacityRange">Transparência</label>
+          <input id="opacityRange" type="range" min="5" max="100" value="30" />
+          <span id="opacityValue">30%</span>
+        </div>
+
+        <div class="control-group">
+          <label for="edgeSoftnessRange">Suavizar bordas</label>
+          <input type="range" id="edgeSoftnessRange" min="0" max="30" value="6" />
+          <span id="edgeSoftnessValue">6 px</span>
+        </div>
+
+        <div class="control-group">
+          <label for="colorBoostRange">Intensidade da cor</label>
+          <input type="range" id="colorBoostRange" min="0" max="200" value="120" />
+          <span id="colorBoostValue">120%</span>
+        </div>
+      </div>
     </section>
   </main>
-
-  <nav class="mobile-bottom-nav">
-    <button type="button" data-mobile-action="view">Vista</button>
-    <button type="button" data-mobile-panel="text">Texto</button>
-    <button type="button" data-mobile-panel="sticker">Sticker</button>
-    <button type="button" data-mobile-panel="adjust">Ajustes</button>
-    <button type="button" data-mobile-panel="actions">Ações</button>
-  </nav>
 
   <footer class="app-footer">
     <p>V1 experimental — Scripture Stickers / Adesivos das Escrituras</p>
