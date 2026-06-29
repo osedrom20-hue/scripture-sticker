@@ -90,8 +90,23 @@ function showSticker() {
   sticker.style.display = "block";
 }
 
+function updateStartGlow() {
+  if (!mobileMenuTrigger) return;
+
+  const hasText =
+    scriptureInput.value.trim().length > 0 ||
+    scriptureText.textContent.trim().length > 0;
+
+  if (isMobileView() && !hasText) {
+    mobileMenuTrigger.classList.add("start-glow");
+  } else {
+    mobileMenuTrigger.classList.remove("start-glow");
+  }
+}
+
 function updateGuideGlow() {
   clearGuideGlow();
+  updateStartGlow();
 
   if (!scriptureInput.value.trim()) {
     scriptureInput.classList.add("guided-glow");
@@ -754,6 +769,8 @@ function closeFloatingToolbar() {
   floatingToolbarButtons.forEach((button) => {
     button.classList.remove("is-active");
   });
+
+  updateStartGlow();
 }
 
 function openFloatingToolbar() {
@@ -761,6 +778,10 @@ function openFloatingToolbar() {
 
   floatingToolbar.classList.add("is-open");
   floatingToolbar.setAttribute("aria-hidden", "false");
+
+  if (mobileMenuTrigger) {
+    mobileMenuTrigger.classList.remove("start-glow");
+  }
 }
 
 function toggleFloatingToolbar() {
@@ -996,6 +1017,8 @@ window.addEventListener("resize", () => {
   if (!isMobileView()) {
     closeAllFloatingPanels();
   }
+
+  updateStartGlow();
 });
 
 window.addEventListener("load", () => {
