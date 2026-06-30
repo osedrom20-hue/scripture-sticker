@@ -48,6 +48,10 @@ Lehi takes his family into the wilderness by the Red Sea—They leave their prop
       <div class="mobile-panel-block" data-panel="sticker">
         <h2>Sticker</h2>
 
+        <div class="button-row">
+          <button id="openStickerLibraryBtn" type="button" class="primary-btn">Biblioteca</button>
+        </div>
+
         <label for="stickerUpload">Carregar sticker transparente</label>
         <input id="stickerUpload" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" />
 
@@ -175,6 +179,115 @@ Lehi takes his family into the wilderness by the Red Sea—They leave their prop
           <label for="colorBoostRange">Intensidade da cor</label>
           <input type="range" id="colorBoostRange" min="0" max="200" value="120" />
           <span id="colorBoostValue">120%</span>
+        </div>
+      </div>
+
+      <div id="stickerLibraryModal" class="sticker-library-modal" aria-hidden="true" hidden>
+        <div class="sticker-library-box">
+          <div class="sticker-library-header">
+            <h2>Biblioteca de stickers</h2>
+            <button id="closeStickerLibraryBtn" type="button">Fechar</button>
+          </div>
+
+          <div class="sticker-library-content">
+            <div class="sticker-library-list">
+  <button
+    type="button"
+    class="sticker-library-item selected"
+    data-sticker-src="stickers/arrependimento.png"
+    data-sticker-name="Arrependimento"
+  >
+    <img src="stickers/arrependimento.png" alt="Arrependimento" />
+    <span>Arrependimento</span>
+  </button>
+
+  <button
+    type="button"
+    class="sticker-library-item"
+    data-sticker-src="stickers/jesucristo.png"
+    data-sticker-name="Jesus Cristo"
+  >
+    <img src="stickers/jesucristo.png" alt="Jesus Cristo" />
+    <span>Jesus Cristo</span>
+  </button>
+
+  <button
+    type="button"
+    class="sticker-library-item"
+    data-sticker-src="stickers/templo.png"
+    data-sticker-name="Templo"
+  >
+    <img src="stickers/templo.png" alt="Templo" />
+    <span>Templo</span>
+  </button>
+
+  <button
+    type="button"
+    class="sticker-library-item"
+    data-sticker-src="stickers/escrituras.png"
+    data-sticker-name="Escrituras"
+  >
+    <img src="stickers/escrituras.png" alt="Escrituras" />
+    <span>Escrituras</span>
+  </button>
+
+  <button
+    type="button"
+    class="sticker-library-item"
+    data-sticker-src="stickers/familia-orando.png"
+    data-sticker-name="Família orando"
+  >
+    <img src="stickers/familia-orando.png" alt="Família orando" />
+    <span>Família orando</span>
+  </button>
+
+  <button
+    type="button"
+    class="sticker-library-item"
+    data-sticker-src="stickers/hombre-orando.png"
+    data-sticker-name="Homem orando"
+  >
+    <img src="stickers/hombre-orando.png" alt="Homem orando" />
+    <span>Homem orando</span>
+  </button>
+
+  <button
+    type="button"
+    class="sticker-library-item"
+    data-sticker-src="stickers/joven-orando.png"
+    data-sticker-name="Jovem orando"
+  >
+    <img src="stickers/joven-orando.png" alt="Jovem orando" />
+    <span>Jovem orando</span>
+  </button>
+
+  <button
+    type="button"
+    class="sticker-library-item"
+    data-sticker-src="stickers/criancas-orando.png"
+    data-sticker-name="Crianças orando"
+  >
+    <img src="stickers/criancas-orando.png" alt="Crianças orando" />
+    <span>Crianças orando</span>
+  </button>
+</div>
+
+            <div class="sticker-library-preview">
+              <p>Vista prévia</p>
+              <img
+                id="stickerLibraryPreview"
+                src="stickers/arrependimento.png"
+                alt="Vista prévia do sticker"
+              />
+              <strong id="stickerLibraryName">Arrependimento</strong>
+            </div>
+          </div>
+
+          <div class="sticker-library-actions">
+            <button id="useSelectedStickerBtn" type="button" class="primary-btn">
+              Usar este sticker
+            </button>
+          </div>
         </div>
       </div>
     </section>
