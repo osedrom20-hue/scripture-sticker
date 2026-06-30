@@ -30,7 +30,6 @@ body {
   color: var(--ink);
 }
 
-/* Header */
 .app-header {
   padding: 18px 24px;
   background: linear-gradient(135deg, #123f4a, #19515f);
@@ -50,7 +49,6 @@ body {
   font-size: 0.95rem;
 }
 
-/* Layout desktop */
 .layout {
   display: grid;
   grid-template-columns: 360px 1fr;
@@ -59,7 +57,6 @@ body {
   min-height: calc(100vh - 120px);
 }
 
-/* Panel izquierdo */
 .panel {
   background: rgba(255, 253, 247, 0.97);
   border: 1px solid #d8d0be;
@@ -91,7 +88,6 @@ label {
   margin-bottom: 6px;
 }
 
-/* Área de texto */
 textarea {
   width: 100%;
   min-height: 260px;
@@ -105,7 +101,6 @@ textarea {
   background: rgba(255, 254, 250, 0.78);
 }
 
-/* Inputs y select */
 input[type="text"],
 select {
   width: 100%;
@@ -117,7 +112,6 @@ select {
   font: inherit;
 }
 
-/* Cargar archivo */
 input[type="file"] {
   width: 100%;
   padding: 10px;
@@ -126,7 +120,6 @@ input[type="file"] {
   background: rgba(255, 254, 250, 0.78);
 }
 
-/* Botones */
 button {
   border: 1px solid #d8d0be;
   border-radius: 14px;
@@ -160,7 +153,6 @@ button:hover {
   box-shadow: 0 8px 22px rgba(16, 56, 68, 0.24);
 }
 
-/* Controles */
 .control-group {
   margin: 14px 0;
 }
@@ -189,7 +181,6 @@ button:hover {
   margin: 16px 0 0;
 }
 
-/* Área de trabajo */
 .workspace {
   position: relative;
   display: flex;
@@ -198,7 +189,6 @@ button:hover {
   overflow: auto;
 }
 
-/* Marco del lector */
 .phone-frame {
   width: min(430px, 100%);
   padding: 10px;
@@ -222,7 +212,6 @@ button:hover {
   touch-action: pan-y;
 }
 
-/* Texto */
 .scripture-text {
   position: relative;
   z-index: 1;
@@ -233,7 +222,6 @@ button:hover {
   color: #1f1b16;
 }
 
-/* Sticker */
 .sticker {
   position: absolute;
   z-index: 2;
@@ -253,7 +241,6 @@ button:hover {
   border-radius: 8px;
 }
 
-/* Destello rojo para centralizar */
 .sticker.center-flash {
   outline: 3px solid rgba(255, 45, 45, 0.75);
   box-shadow:
@@ -261,7 +248,223 @@ button:hover {
     0 0 36px rgba(255, 0, 0, 0.42);
 }
 
-/* Footer */
+/* Biblioteca */
+.sticker-library-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0, 40, 60, 0.30);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+}
+
+.sticker-library-modal[hidden] {
+  display: none;
+}
+
+.sticker-library-box {
+  width: min(720px, 100%);
+  max-height: min(680px, 92vh);
+  overflow: auto;
+  border-radius: 24px;
+  padding: 18px;
+  background: rgba(185, 238, 255, 0.10);
+  border: 1px solid rgba(0, 238, 255, 0.95);
+  box-shadow:
+    0 0 20px rgba(0, 238, 255, 0.82),
+    0 0 48px rgba(0, 166, 255, 0.58),
+    0 0 78px rgba(0, 214, 255, 0.36),
+    0 22px 60px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+}
+
+.sticker-library-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.42);
+}
+
+.sticker-library-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #ffffff;
+  text-shadow:
+    0 0 8px rgba(0, 238, 255, 0.88),
+    0 1px 3px rgba(0, 30, 40, 0.85);
+}
+
+.sticker-library-content {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 18px;
+  padding: 18px 0;
+}
+
+.sticker-library-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  gap: 12px;
+  align-content: start;
+}
+
+.sticker-library-item {
+  display: grid;
+  gap: 8px;
+  place-items: center;
+  min-height: 140px;
+  padding: 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.68);
+}
+
+.sticker-library-item img {
+  width: 86px;
+  height: 86px;
+  object-fit: contain;
+  display: block;
+}
+
+.sticker-library-item span {
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.sticker-library-item.selected {
+  border-color: rgba(0, 255, 235, 1);
+  box-shadow:
+    0 0 0 3px rgba(0, 255, 235, 0.34),
+    0 0 20px rgba(0, 255, 235, 0.82),
+    0 0 42px rgba(0, 166, 255, 0.54);
+}
+
+.sticker-library-preview {
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  min-height: 260px;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px dashed rgba(0, 238, 255, 0.78);
+  box-shadow:
+    inset 0 0 18px rgba(0, 238, 255, 0.22),
+    0 0 18px rgba(0, 238, 255, 0.36);
+}
+
+.sticker-library-preview p {
+  margin: 0;
+  color: #103844;
+  font-size: 0.9rem;
+}
+
+.sticker-library-preview img {
+  width: min(200px, 100%);
+  height: 200px;
+  object-fit: contain;
+  display: block;
+}
+
+.sticker-library-preview strong {
+  text-align: center;
+  color: #103844;
+}
+
+.sticker-library-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 12px;
+  background: rgba(185, 238, 255, 0.10);
+  border-top: 1px solid rgba(255, 255, 255, 0.42);
+}
+
+.sticker-library-actions .primary-btn {
+  box-shadow:
+    0 0 14px rgba(0, 238, 255, 0.70),
+    0 0 30px rgba(0, 166, 255, 0.46);
+}
+
+/* Botón Sticker del menú flotante */
+.floating-toolbar button[data-mobile-panel="sticker"] {
+  background: rgba(110, 220, 255, 0.22) !important;
+  border: 1px solid rgba(120, 235, 255, 0.92) !important;
+  box-shadow:
+    0 0 10px rgba(120, 235, 255, 0.58),
+    0 0 22px rgba(70, 200, 255, 0.34),
+    inset 0 0 8px rgba(255, 255, 255, 0.18) !important;
+}
+
+.floating-toolbar button[data-mobile-panel="sticker"]:hover,
+.floating-toolbar button[data-mobile-panel="sticker"].is-active {
+  background: rgba(130, 230, 255, 0.34) !important;
+  border-color: rgba(140, 245, 255, 1) !important;
+  box-shadow:
+    0 0 14px rgba(120, 235, 255, 0.86),
+    0 0 30px rgba(70, 200, 255, 0.52),
+    0 0 48px rgba(0, 214, 255, 0.28),
+    inset 0 0 10px rgba(255, 255, 255, 0.22) !important;
+}
+
+/* Botón Biblioteca */
+#openStickerLibraryBtn {
+  background: linear-gradient(135deg, rgba(90, 215, 255, 0.95), rgba(0, 170, 230, 0.96)) !important;
+  border: 1px solid rgba(150, 245, 255, 0.96) !important;
+  color: #ffffff !important;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.25);
+  box-shadow:
+    0 0 12px rgba(120, 235, 255, 0.66),
+    0 0 24px rgba(70, 200, 255, 0.42),
+    0 0 40px rgba(0, 214, 255, 0.22) !important;
+}
+
+#openStickerLibraryBtn:hover {
+  background: linear-gradient(135deg, rgba(115, 225, 255, 1), rgba(20, 185, 240, 1)) !important;
+  border-color: rgba(170, 248, 255, 1) !important;
+  box-shadow:
+    0 0 16px rgba(120, 235, 255, 0.88),
+    0 0 32px rgba(70, 200, 255, 0.56),
+    0 0 54px rgba(0, 214, 255, 0.30) !important;
+}
+
+#openStickerLibraryBtn:active {
+  transform: scale(0.98);
+}
+
+/* Botón Usar este sticker */
+#useSelectedStickerBtn {
+  background: linear-gradient(135deg, rgba(90, 215, 255, 0.96), rgba(0, 170, 230, 0.98)) !important;
+  border: 1px solid rgba(150, 245, 255, 0.98) !important;
+  color: #ffffff !important;
+  text-shadow:
+    0 0 6px rgba(255, 255, 255, 0.34),
+    0 1px 2px rgba(0, 40, 60, 0.65);
+  box-shadow:
+    0 0 14px rgba(120, 235, 255, 0.76),
+    0 0 30px rgba(70, 200, 255, 0.50),
+    0 0 50px rgba(0, 214, 255, 0.28) !important;
+}
+
+#useSelectedStickerBtn:hover {
+  background: linear-gradient(135deg, rgba(120, 230, 255, 1), rgba(20, 190, 245, 1)) !important;
+  border-color: rgba(180, 250, 255, 1) !important;
+  box-shadow:
+    0 0 18px rgba(120, 235, 255, 0.96),
+    0 0 38px rgba(70, 200, 255, 0.66),
+    0 0 62px rgba(0, 214, 255, 0.36) !important;
+}
+
+#useSelectedStickerBtn:active {
+  transform: scale(0.98);
+}
+
 .app-footer {
   text-align: center;
   color: var(--muted);
@@ -269,7 +472,6 @@ button:hover {
   padding: 12px 24px 24px;
 }
 
-/* Luz guía azul-verde */
 .guided-glow {
   position: relative;
   border-color: var(--glow-green) !important;
@@ -328,7 +530,6 @@ button.primary-btn.guided-glow {
   }
 }
 
-/* Parpadeo verde para iniciar nuevo proyecto */
 @keyframes neonStartPulse {
   0% {
     box-shadow:
@@ -356,14 +557,12 @@ button.primary-btn.guided-glow {
   }
 }
 
-/* Menú flotante: oculto en desktop */
 .mobile-menu-trigger,
 .floating-toolbar,
 .advanced-submenu {
   display: none;
 }
 
-/* Fondos del área de lectura */
 #captureArea.bg-white {
   background: #fffdf7;
 }
@@ -384,7 +583,7 @@ button.primary-btn.guided-glow {
   background: #ffd9c7;
 }
 
-/* Tablet y celular */
+/* Celular y tablet */
 @media (max-width: 850px) {
   body {
     padding-bottom: 24px;
@@ -426,7 +625,6 @@ button.primary-btn.guided-glow {
     min-height: 220px;
   }
 
-  /* Submenús móviles */
   .controls-panel.mobile-drawer {
     position: fixed;
     left: 14px;
@@ -439,8 +637,8 @@ button.primary-btn.guided-glow {
     padding: 14px;
     transform: translateY(125%);
     transition: transform 0.22s ease;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
     box-shadow:
       0 0 14px rgba(255, 255, 255, 0.25),
       0 0 28px rgba(0, 0, 0, 0.18);
@@ -450,37 +648,39 @@ button.primary-btn.guided-glow {
     transform: translateY(0);
   }
 
-  /* Texto: amarillo neón */
   .controls-panel.mobile-drawer:has(.mobile-panel-block[data-panel="text"].is-active) {
-    background: rgba(255, 238, 0, 0.48);
-    border: 1px solid rgba(255, 255, 0, 0.78);
+    background: rgba(255, 238, 0, 0.28);
+    border: 1px solid rgba(255, 255, 0, 0.92);
     box-shadow:
-      0 0 12px rgba(255, 238, 0, 0.52),
-      0 0 24px rgba(255, 205, 0, 0.34);
+      0 0 14px rgba(255, 238, 0, 0.72),
+      0 0 34px rgba(255, 205, 0, 0.48),
+      0 0 58px rgba(255, 255, 0, 0.24);
   }
 
-  /* Sticker: naranja neón */
   .controls-panel.mobile-drawer:has(.mobile-panel-block[data-panel="sticker"].is-active) {
-    background: rgba(255, 128, 0, 0.48);
-    border: 1px solid rgba(255, 154, 0, 0.80);
+    background: rgba(255, 128, 0, 0.30);
+    border: 1px solid rgba(255, 180, 0, 0.92);
     box-shadow:
-      0 0 12px rgba(255, 128, 0, 0.54),
-      0 0 24px rgba(255, 90, 0, 0.36);
+      0 0 14px rgba(255, 150, 0, 0.72),
+      0 0 34px rgba(255, 90, 0, 0.50),
+      0 0 58px rgba(255, 128, 0, 0.24);
   }
 
-  /* Tamaño: turquesa */
   .controls-panel.mobile-drawer:has(.mobile-panel-block[data-panel="size"].is-active) {
-    background: rgba(0, 255, 235, 0.42);
-    border: 1px solid rgba(0, 255, 235, 0.78);
+    background: rgba(0, 255, 235, 0.24);
+    border: 1px solid rgba(0, 255, 235, 0.92);
     box-shadow:
-      0 0 12px rgba(0, 255, 235, 0.50),
-      0 0 24px rgba(0, 170, 255, 0.34);
+      0 0 14px rgba(0, 255, 235, 0.72),
+      0 0 34px rgba(0, 170, 255, 0.50),
+      0 0 58px rgba(0, 255, 235, 0.24);
   }
 
-  /* Ações: neutro */
   .controls-panel.mobile-drawer:has(.mobile-panel-block[data-panel="actions"].is-active) {
-    background: rgba(255, 255, 255, 0.42);
-    border: 1px solid rgba(255, 255, 255, 0.76);
+    background: rgba(255, 255, 255, 0.24);
+    border: 1px solid rgba(255, 255, 255, 0.86);
+    box-shadow:
+      0 0 12px rgba(255, 255, 255, 0.42),
+      0 0 28px rgba(0, 214, 255, 0.20);
   }
 
   .controls-panel.mobile-drawer h2,
@@ -522,7 +722,6 @@ button.primary-btn.guided-glow {
     padding: 12px 14px;
   }
 
-  /* Botón pequeño para abrir menú */
   .mobile-menu-trigger {
     position: fixed;
     right: 16px;
@@ -552,7 +751,6 @@ button.primary-btn.guided-glow {
     animation: neonStartPulse 1.25s ease-in-out infinite;
   }
 
-  /* Menú principal: azul eléctrico translúcido sin blur */
   .floating-toolbar {
     position: fixed;
     right: 14px;
@@ -609,7 +807,6 @@ button.primary-btn.guided-glow {
     pointer-events: none;
   }
 
-  /* Submenú ajustes: verde eléctrico con blur moderado */
   .advanced-submenu {
     position: fixed;
     right: 76px;
@@ -619,13 +816,14 @@ button.primary-btn.guided-glow {
     width: min(280px, calc(100vw - 110px));
     padding: 14px;
     border-radius: 22px;
-    background: rgba(0, 255, 150, 0.38);
-    border: 1px solid rgba(0, 255, 180, 0.72);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(0, 255, 150, 0.22);
+    border: 1px solid rgba(0, 255, 180, 0.92);
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
     box-shadow:
-      0 0 10px rgba(0, 255, 180, 0.46),
-      0 0 22px rgba(0, 214, 120, 0.30);
+      0 0 14px rgba(0, 255, 180, 0.72),
+      0 0 34px rgba(0, 214, 120, 0.50),
+      0 0 58px rgba(0, 255, 150, 0.24);
   }
 
   .advanced-submenu.is-open {
@@ -648,6 +846,108 @@ button.primary-btn.guided-glow {
 
   .advanced-submenu input[type="range"] {
     accent-color: #00ffd0;
+  }
+
+  .sticker-library-modal {
+    padding: 10px;
+    place-items: center;
+  }
+
+  .sticker-library-box {
+    width: 100%;
+    height: min(86vh, 680px);
+    max-height: 86vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 12px;
+    border-radius: 22px;
+  }
+
+  .sticker-library-header {
+    flex-shrink: 0;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
+
+  .sticker-library-header h2 {
+    font-size: 1rem;
+  }
+
+  .sticker-library-header button {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .sticker-library-content {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .sticker-library-preview {
+    order: 1;
+    flex-shrink: 0;
+    min-height: auto;
+    padding: 10px;
+    gap: 6px;
+  }
+
+  .sticker-library-preview img {
+    width: 118px;
+    height: 118px;
+  }
+
+  .sticker-library-preview p {
+    font-size: 0.78rem;
+  }
+
+  .sticker-library-preview strong {
+    font-size: 0.9rem;
+  }
+
+  .sticker-library-list {
+    order: 2;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding-right: 4px;
+  }
+
+  .sticker-library-item {
+    min-height: 92px;
+    padding: 8px;
+    border-radius: 14px;
+    gap: 5px;
+  }
+
+  .sticker-library-item img {
+    width: 54px;
+    height: 54px;
+  }
+
+  .sticker-library-item span {
+    font-size: 0.76rem;
+    line-height: 1.15;
+  }
+
+  .sticker-library-actions {
+    flex-shrink: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    padding-top: 10px;
+    margin-top: 8px;
+  }
+
+  .sticker-library-actions .primary-btn {
+    width: 100%;
   }
 
   .app-footer {
@@ -675,5 +975,31 @@ button.primary-btn.guided-glow {
     right: 72px;
     bottom: 140px;
     width: min(260px, calc(100vw - 104px));
+  }
+
+  .sticker-library-header {
+    align-items: flex-start;
+  }
+
+  .sticker-library-header h2 {
+    font-size: 1rem;
+  }
+
+  .sticker-library-box {
+    height: 88vh;
+    max-height: 88vh;
+  }
+
+  .sticker-library-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sticker-library-item {
+    min-height: 88px;
+  }
+
+  .sticker-library-item img {
+    width: 50px;
+    height: 50px;
   }
 }
