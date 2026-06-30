@@ -41,6 +41,14 @@ const floatingToolbar = document.getElementById("floatingToolbar");
 const floatingToolbarButtons = document.querySelectorAll(".floating-toolbar button");
 const advancedSubmenu = document.getElementById("advancedSubmenu");
 
+const openStickerLibraryBtn = document.getElementById("openStickerLibraryBtn");
+const stickerLibraryModal = document.getElementById("stickerLibraryModal");
+const closeStickerLibraryBtn = document.getElementById("closeStickerLibraryBtn");
+const useSelectedStickerBtn = document.getElementById("useSelectedStickerBtn");
+const stickerLibraryPreview = document.getElementById("stickerLibraryPreview");
+const stickerLibraryName = document.getElementById("stickerLibraryName");
+const stickerLibraryItems = document.querySelectorAll(".sticker-library-item");
+
 const AUTO_OPACITY = "30";
 const AUTO_EDGE_SOFTNESS = "6";
 const AUTO_COLOR_BOOST = "120";
@@ -63,6 +71,9 @@ let dragOffsetY = 0;
 let longPressTimer = null;
 let longPressStartX = 0;
 let longPressStartY = 0;
+
+let selectedLibraryStickerSrc = "stickers/arrependimento.svg";
+let selectedLibraryStickerName = "Arrependimento";
 
 const mobilePanelTitles = {
   text: "Texto",
@@ -119,7 +130,12 @@ function updateGuideGlow() {
   }
 
   if (!stickerStepDone) {
-    stickerUpload.classList.add("guided-glow");
+    if (openStickerLibraryBtn) {
+      openStickerLibraryBtn.classList.add("guided-glow");
+    } else {
+      stickerUpload.classList.add("guided-glow");
+    }
+
     return;
   }
 
@@ -365,7 +381,7 @@ function getProjectData() {
   return {
     projectName: projectNameInput.value.trim(),
     text: scriptureInput.value,
-    stickerSrc: stickerStepDone ? sticker.src : "",
+    stickerSrc: stickerStepDone ? sticker.getAttribute("src") || sticker.src : "",
     stickerLeft: sticker.style.left,
     stickerTop: sticker.style.top,
     stickerWidth: sticker.style.width,
@@ -521,6 +537,7 @@ function newProject() {
   shareStepDone = false;
 
   closeAllFloatingPanels();
+  closeStickerLibrary();
   updateGuideGlow();
 }
 
@@ -581,6 +598,65 @@ function loadStickerFromFile(event) {
   };
 
   reader.readAsDataURL(file);
+}
+
+function openStickerLibrary() {
+  if (!stickerLibraryModal) return;
+
+  closeFloatingToolbar();
+  closeMobileDrawer();
+  closeAdvancedSubmenu();
+
+  stickerLibraryModal.hidden = false;
+  stickerLibraryModal.setAttribute("aria-hidden", "false");
+}
+
+function closeStickerLibrary() {
+  if (!stickerLibraryModal) return;
+
+  stickerLibraryModal.hidden = true;
+  stickerLibraryModal.setAttribute("aria-hidden", "true");
+}
+
+function selectStickerFromLibrary(item) {
+  if (!item) return;
+
+  selectedLibraryStickerSrc = item.dataset.stickerSrc || "";
+  selectedLibraryStickerName = item.dataset.stickerName || "Sticker";
+
+  stickerLibraryItems.forEach((libraryItem) => {
+    libraryItem.classList.toggle("selected", libraryItem === item);
+  });
+
+  if (stickerLibraryPreview) {
+    stickerLibraryPreview.src = selectedLibraryStickerSrc;
+  }
+
+  if (stickerLibraryName) {
+    stickerLibraryName.textContent = selectedLibraryStickerName;
+  }
+}
+
+function useSelectedStickerFromLibrary() {
+  if (!selectedLibraryStickerSrc) return;
+
+  sticker.src = selectedLibraryStickerSrc;
+  sticker.alt = selectedLibraryStickerName || "Sticker digital";
+
+  showSticker();
+  centerSticker();
+  applyAutomaticStickerSettings();
+
+  stickerStepDone = true;
+  sizeStepDone = false;
+  projectStepDone = false;
+  exportStepDone = false;
+  shareStepDone = false;
+
+  closeStickerLibrary();
+  closeMobileDrawer();
+  closeAdvancedSubmenu();
+  updateGuideGlow();
 }
 
 function waitForImage(imageElement) {
@@ -841,6 +917,32 @@ projectNameInput.addEventListener("input", () => {
 
 stickerUpload.addEventListener("change", loadStickerFromFile);
 
+if (openStickerLibraryBtn) {
+  openStickerLibraryBtn.addEventListener("click", openStickerLibrary);
+}
+
+if (closeStickerLibraryBtn) {
+  closeStickerLibraryBtn.addEventListener("click", closeStickerLibrary);
+}
+
+if (useSelectedStickerBtn) {
+  useSelectedStickerBtn.addEventListener("click", useSelectedStickerFromLibrary);
+}
+
+stickerLibraryItems.forEach((item) => {
+  item.addEventListener("click", () => {
+    selectStickerFromLibrary(item);
+  });
+});
+
+if (stickerLibraryModal) {
+  stickerLibraryModal.addEventListener("click", (event) => {
+    if (event.target === stickerLibraryModal) {
+      closeStickerLibrary();
+    }
+  });
+}
+
 sticker.addEventListener("pointerdown", startDrag);
 
 resetStickerBtn.addEventListener("click", () => {
@@ -1006,8 +1108,9 @@ document.addEventListener("click", (event) => {
   const clickedDrawer = controlsDrawer && controlsDrawer.contains(event.target);
   const clickedAdvanced = advancedSubmenu && advancedSubmenu.contains(event.target);
   const clickedTrigger = mobileMenuTrigger && mobileMenuTrigger.contains(event.target);
+  const clickedLibrary = stickerLibraryModal && stickerLibraryModal.contains(event.target);
 
-  if (!clickedToolbar && !clickedDrawer && !clickedAdvanced && !clickedTrigger) {
+  if (!clickedToolbar && !clickedDrawer && !clickedAdvanced && !clickedTrigger && !clickedLibrary) {
     closeMobileDrawer();
     closeAdvancedSubmenu();
   }
@@ -1022,6 +1125,12 @@ window.addEventListener("resize", () => {
 });
 
 window.addEventListener("load", () => {
+  const firstLibraryItem = document.querySelector(".sticker-library-item.selected") || document.querySelector(".sticker-library-item");
+
+  if (firstLibraryItem) {
+    selectStickerFromLibrary(firstLibraryItem);
+  }
+
   hideSticker();
 
   opacityRange.value = AUTO_OPACITY;
